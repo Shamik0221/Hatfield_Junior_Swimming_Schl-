@@ -1,9 +1,8 @@
 package com.hjss.swimmingschool;
 
-import java.util.UUID;
-
 public class Coach {
-    private UUID id;
+    private static int sequence = 20001;
+    private int id;
     private String name;
     private String gender;
     private int age;
@@ -12,7 +11,7 @@ public class Coach {
 
 
     public Coach(String name, String gender, int age, String phone,int yearOfExperience) {
-        this.id =  new UUID();
+        this.id =  sequence++;
         this.name = name;
         this.gender = gender;
         this.age = age;
