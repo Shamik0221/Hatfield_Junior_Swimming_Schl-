@@ -13,7 +13,25 @@ public class Review {
         this.rating = -1; 
         this.comments = ""; 
     }
-    
+
+    // Getters methods for Review Class
+    public void setRating(int newRating) {
+        this.rating = newRating;
+    }
+
+    public void setComments(String newComments){
+        this.comments = newComments;
+    }
+
+    // Getters methods for Review Class
+    public int getRating() {
+        return this.rating;
+    }
+
+    public String getComments(){
+        return this.comments;
+    }
+
     public Review (int rating, String comments) {
         this.id = sequence++; 
         this.rating = rating;
