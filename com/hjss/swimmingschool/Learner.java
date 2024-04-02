@@ -2,6 +2,7 @@ package com.hjss.swimmingschool;
 import java.util.ArrayList;
 
 public class Learner {
+    
     private static int sequence = 10001;
     private int id;
     private String name;
@@ -86,5 +87,26 @@ public class Learner {
 
     }
 
+    @Override
+    public String toString() {
+        return name + ", " + age + "," + gender + ",(" + phone + "), (" + emergencyContact + ")" + grade ;
+    }
 
+    public void printInfo() {
+        System.out.println("Learner Id       : " + id);
+        System.out.println("Learner Name     : " + name);
+        System.out.println("Learner Gender   : " + gender);
+        System.out.println("Learner Age      : " + age);
+        System.out.println("Learner Phone    : " + phone);
+        System.out.println("Learner EmerPhone: " + emergencyContact);
+        System.out.println("Learner Grade    : " + grade);
+        System.out.println("Finished Session :");
+        for(Session s : sessionFinished) {
+            System.out.println(s);
+        }
+        System.out.println("Booked Session   :");
+        for(Session s : sessionBooked) {
+            System.out.println(s);
+        }
+    }
 }

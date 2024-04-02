@@ -1,6 +1,8 @@
 package com.hjss.swimmingschool;
 
 public class Coach {
+
+    // Data Variable for the class
     private static int sequence = 20001;
     private int id;
     private String name;
@@ -41,6 +43,7 @@ public class Coach {
     }
     
     // Getter Methods of the Coach Class
+    
     public String getName()   {
         return this.name;
     }
@@ -76,4 +79,5 @@ public class Coach {
         System.out.println("Coach Phone    : " + phone);
         System.out.println("Coach Exp      : " + yearOfExperience);
     }
+
 }
