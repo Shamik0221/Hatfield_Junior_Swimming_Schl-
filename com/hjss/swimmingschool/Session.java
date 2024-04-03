@@ -72,7 +72,34 @@ public class Session {
         return status;
     }
 
+    @Override
+    public String toString() {
+        String msg =  "Day: " + day + "\nTimeSlot:" + timeslot + "\nCoachName: " + coachName + "\nNumber of Learner:" +
+                numberLearners + "\n";
+        for(Review r: listofReviews ){
+            msg += "Review: (" + r.getComments() +"," + r.getRating() +  "\n";
+        }
+        for(Learner l: listOfLearners ){
+            msg += "Learner Name: " + l.getName() + "\n";
+        }
+
+        return msg;
+    }
+
     public void printInfo() {
-        System.out.println("Session Id: " + id);
+
+
+        System.out.println("Session Id         : " + id);
+        System.out.println("Session Day        : " + day);
+        System.out.println("Session Timeslot   : " + timeslot);
+        System.out.println("Session Coach Name : " + coachName);
+        System.out.println("Number of Learners : " + numberLearners);
+        for(Review r: listofReviews ){
+            System.out.println("Review: (" + r.getComments() +"," + r.getRating());
+        }
+        for(Learner l: listOfLearners ){
+            System.out.println("Learner Name: " + l.getName());
+        }
+
     }
 }

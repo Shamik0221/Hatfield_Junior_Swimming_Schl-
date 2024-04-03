@@ -5,6 +5,7 @@ import java.util.UUID;
 public class Review {
     private static int sequence = 40001;
     private int id;
+
     public String comments;
     public int rating;
 
@@ -41,6 +42,11 @@ public class Review {
     public void updateReview(int rating, String comments) {
         this.rating = rating;
         this.comments = comments;
+    }
+
+    @Override
+    public String toString() {
+        return comments + " " + rating;
     }
 
     public void printInfo() {
