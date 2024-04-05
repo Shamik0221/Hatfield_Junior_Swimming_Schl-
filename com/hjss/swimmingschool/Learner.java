@@ -97,14 +97,14 @@ public class Learner {
 
             //removing booked session if session is lesser than their grade
             ArrayList<Session> temp = new ArrayList<Session>();
-            for (Session s : sessionBooked) {
-                if (s.getGrade() < grade) {
-                    temp.add(s);
+            for (Session ns : sessionBooked) {
+                if (ns.getGrade() < grade) {
+                    temp.add(ns);
                 }
             }
-            for (Session s : temp) {
-                System.out.println("In Student : Deleting Lower Grade Session :\n" + s);
-                sessionBooked.remove(s);
+            for (Session ns : temp) {
+                System.out.println("In Student : Deleting Lower Grade Session :\n" + ns);
+                sessionBooked.remove(ns);
             }
             // deleting the memory 
             temp = null;
