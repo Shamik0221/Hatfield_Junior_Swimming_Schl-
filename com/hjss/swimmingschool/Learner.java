@@ -2,7 +2,7 @@ package com.hjss.swimmingschool;
 import java.util.ArrayList;
 
 public class Learner {
-    
+
     private static int sequence = 10001;
     private int id;
     private String name;
@@ -11,7 +11,7 @@ public class Learner {
     private String phone;
     private String emergencyContact;
     private int grade;
-    private ArrayList<Session> sessionFinished;
+    private ArrayList<Session> sessionCompleted;
     private ArrayList<Session> sessionBooked;
 
     // Constructor
@@ -23,7 +23,7 @@ public class Learner {
         this.phone = phone;
         this.emergencyContact = emergencyContact;
         this.grade = grade;
-        sessionFinished = new ArrayList<Session>();
+        sessionCompleted = new ArrayList<Session>();
         sessionBooked = new ArrayList<Session>();
     }
 
@@ -78,15 +78,40 @@ public class Learner {
         return this.grade;
     }
 
-
-    public void bookSession(){
-
+    public void bookSession(Session s){
+        sessionBooked.add(s);
     }
 
-    public void updateSession(){
-
+    public void cancelSession(Session s){
+        sessionBooked.remove(s);
     }
 
+    public void updateSession(Session s) {
+
+        sessionBooked.remove(s);
+        sessionCompleted.add(s); 
+
+        // update the grade of the student
+        if (s.getGrade() >  grade) {
+            grade = s.getGrade();
+
+            //removing booked session if session is lesser than their grade
+            ArrayList<Session> temp = new ArrayList<Session>();
+            for (Session s : sessionBooked) {
+                if (s.getGrade() < grade) {
+                    temp.add(s);
+                }
+            }
+            for (Session s : temp) {
+                System.out.println("In Student : Deleting Lower Grade Session :\n" + s);
+                sessionBooked.remove(s);
+            }
+            // deleting the memory 
+            temp = null;
+
+        }
+    }
+    
     @Override
     public String toString() {
         return name + ", " + age + "," + gender + ",(" + phone + "), (" + emergencyContact + ")" + grade ;
@@ -100,8 +125,8 @@ public class Learner {
         System.out.println("Learner Phone    : " + phone);
         System.out.println("Learner EmerPhone: " + emergencyContact);
         System.out.println("Learner Grade    : " + grade);
-        System.out.println("Finished Session :");
-        for(Session s : sessionFinished) {
+        System.out.println("Completed Session :");
+        for(Session s : sessionCompleted) {
             System.out.println(s);
         }
         System.out.println("Booked Session   :");
@@ -110,3 +135,4 @@ public class Learner {
         }
     }
 }
+
