@@ -3,9 +3,9 @@ package com.hjss.swimmingschool;
 import java.util.UUID;
 
 public class Review {
+
     private static int sequence = 40001;
     private int id;
-
     public String comments;
     public int rating;
 

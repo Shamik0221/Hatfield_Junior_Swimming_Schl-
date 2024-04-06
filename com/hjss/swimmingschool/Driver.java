@@ -8,10 +8,10 @@ import java.io.IOException;
 
 public class Driver {
 
+    private static SessionManager ssm;
 
     public static void main(String[] args) throws Exception {
-
-        SessionManager ssm = new SessionManager();
+//
 
         // creating an object of Scanner Class
         Scanner sc = new Scanner(System.in);
@@ -26,7 +26,15 @@ public class Driver {
         // Runing a loop until user choose to exit
         
         // read database.txt file
-        readDatabase();
+        try {
+            ssm = readDatabase();
+        }catch (IOException e) {
+            System.out.println("Error: No Database Found!");
+        }catch (ClassNotFoundException e) {
+            System.out.println("Error: File Not Foundd!");
+        }finally {
+            ssm = new SessionManager();
+        }
 
         while (run) {
 
@@ -63,14 +71,22 @@ public class Driver {
                          break;
             }
         }
-        System.out.println("Thank for swimming with Hatfield Junior Swimming School!!");
-        
-        // read database.txt file
-        writeDatabase(ssm);
+
+        // write sessionManager to database.txt file
+        try {
+            writeDataBase(ssm);
+        }catch (IOException e) {
+            System.out.println("Error: Can't write file to disk!");
+        }catch (ClassNotFoundException e) {
+        System.out.println("Error: File Not Foundd!");
+        }finally {
+            System.out.println("Thank for swimming with Hatfield Junior Swimming School!!");
+        }
+
     }
 
 
-    public static SessionManager readDatabase() {
+    public static SessionManager readDatabase()  throws IOException, ClassNotFoundException{
         String fileName= "database.txt";
         FileInputStream fin = new FileInputStream(fileName);
         ObjectInputStream ois = new ObjectInputStream(fin);
@@ -80,7 +96,7 @@ public class Driver {
     }
 
 
-    public static void writeDataBase(SessionManager ssm) throws IOException{
+    public static void writeDataBase(SessionManager ssm) throws IOException, ClassNotFoundException{
         String fileName= "database.txt";
         FileOutputStream fos = new FileOutputStream(fileName);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
