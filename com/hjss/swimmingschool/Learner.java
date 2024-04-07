@@ -78,6 +78,28 @@ public class Learner {
         return this.grade;
     }
 
+    public boolean findInBookedSession(Session s) {
+        boolean status = false;
+        for(Session t: sessionBooked) {
+            if (t == s) {
+                status = true;
+                break;
+            }
+        }
+        return status;
+    }
+
+    public boolean findInCompletedSession(Session s) {
+        boolean status = false;
+        for(Session t: sessionCompleted) {
+            if (t == s) {
+                status = true;
+                break;
+            }
+        }
+        return status;
+    }
+
     public void bookSession(Session s){
         sessionBooked.add(s);
     }

@@ -61,9 +61,11 @@ public class Session {
             listOfLearners.add(l);
             numberLearners++;
             status = true;
+            l.bookSession(this);
         }
         return status;
     }
+
 
     @Override
     public String toString() {
