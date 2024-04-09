@@ -1,10 +1,7 @@
 package com.hjss.swimmingschool;
+import java.io.*;
 import java.util.Scanner;  // Import the Scanner class
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.IOException;
+
 
 public class Driver {
 
@@ -26,15 +23,7 @@ public class Driver {
         // Runing a loop until user choose to exit
         
         // read database.txt file
-        try {
-            ssm = readDatabase();
-        }catch (IOException e) {
-            System.out.println("Error: No Database Found!");
-        }catch (ClassNotFoundException e) {
-            System.out.println("Error: File Not Foundd!");
-        }finally {
-            ssm = new SessionManager();
-        }
+        ssm = readDatabase();
 
         while (run) {
 
@@ -73,35 +62,66 @@ public class Driver {
         }
 
         // write sessionManager to database.txt file
-        try {
-            writeDataBase(ssm);
-        }catch (IOException e) {
-            System.out.println("Error: Can't write file to disk!");
-        }catch (ClassNotFoundException e) {
-        System.out.println("Error: File Not Foundd!");
-        }finally {
-            System.out.println("Thank for swimming with Hatfield Junior Swimming School!!");
-        }
+        writeDataBase(ssm);
 
     }
 
 
-    public static SessionManager readDatabase()  throws IOException, ClassNotFoundException{
-        String fileName= "database.txt";
-        FileInputStream fin = new FileInputStream(fileName);
-        ObjectInputStream ois = new ObjectInputStream(fin);
-        SessionManager ssm = (SessionManager) ois.readObject();
-        ois.close();
+    public static void readFile(){
+        String fileName= "defaultInput.txt";
+
+    }
+    public static SessionManager readDatabase() {
+        String fileName= "database.obj";
+        ObjectInputStream ois = null;
+        SessionManager ssm = null;
+
+        try {
+            ois = new ObjectInputStream(new FileInputStream(fileName));
+            ssm = (SessionManager) ois.readObject();
+        }catch (FileNotFoundException e) {
+            System.out.println("1");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.out.println("3");
+        } catch (ClassCastException e) {
+                System.out.println("4");
+        } finally {
+            if (ois != null) {
+                try {
+                    ois.close();
+                } catch (IOException e) {
+                    System.out.println("4");
+                }
+            }
+        }
+
         return ssm; 
     }
 
 
-    public static void writeDataBase(SessionManager ssm) throws IOException, ClassNotFoundException{
-        String fileName= "database.txt";
-        FileOutputStream fos = new FileOutputStream(fileName);
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-        oos.writeObject(ssm);
-        oos.close();
+    public static void writeDataBase(SessionManager ssm){
+        String fileName= "database.obj";
+        ObjectOutputStream oos = null;
+        try {
+            oos = new ObjectOutputStream(new FileOutputStream(fileName));
+            oos.writeObject(ssm);
+        }catch (FileNotFoundException e) {
+            System.out.println("1");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassCastException e) {
+            System.out.println("4");
+        } finally {
+            if (oos != null) {
+                try {
+                    oos.close();
+                } catch (IOException e) {
+                    System.out.println("4");
+                }
+            }
+        }
     }
 
     private static void displayMenu() {

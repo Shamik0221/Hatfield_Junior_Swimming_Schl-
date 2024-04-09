@@ -6,53 +6,48 @@ public class Review {
 
     private static int sequence = 40001;
     private int id;
-    public String comments;
+    public String comment;
     public int rating;
 
     public Review () {
         this.id = sequence++; 
         this.rating = -1; 
-        this.comments = ""; 
+        this.comment = "";
     }
 
-    // Getters methods for Review Class
-    public void setRating(int newRating) {
-        this.rating = newRating;
-    }
 
-    public void setComments(String newComments){
-        this.comments = newComments;
-    }
 
-    // Getters methods for Review Class
-    public int getRating() {
-        return this.rating;
-    }
-
-    public String getComments(){
-        return this.comments;
-    }
-
-    public Review (int rating, String comments) {
+    public Review (int rating, String comment) {
         this.id = sequence++; 
         this.rating = rating;
-        this.comments = comments;
+        this.comment = comment;
     }
-    
-    public void updateReview(int rating, String comments) {
-        this.rating = rating;
-        this.comments = comments;
+
+    public void setComment(String comment){
+        this.comment = comment;
+    }
+
+    public void setRating(int rating) {
+         this.rating = rating;
+    }
+
+    public String getComment(){
+        return comment;
+    }
+
+    public int getRating() {
+        return rating;
     }
 
     @Override
     public String toString() {
-        return comments + " " + rating;
+        return comment + " " + rating;
     }
 
     public void printInfo() {
         System.out.println("Review Id       : " + id);
         System.out.println("Review Rating   : " + rating);
-        System.out.println("Review Comments : " + comments);
+        System.out.println("Review Comments : " + comment);
     }
 
 }

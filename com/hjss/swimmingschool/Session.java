@@ -4,8 +4,10 @@ import java.util.Arrays;
 import java.util.ArrayList;
 
 public class Session {
+
     private static int sequence = 30001;
     private static int maxLearner = 4;
+
     private int id;
     private String day;
     private int gradeLevel;
@@ -54,8 +56,30 @@ public class Session {
         listofReviews.add(r);
     }
 
+    public boolean findLearner(Learner l) {
+        boolean status = false;
+        for(Learner t: listOfLearners) {
+            if (t == l) {
+                status = true;
+                break;
+            }
+        }
+        return status;
+    }
+
+    public boolean findReview (Review r) {
+        boolean status = false;
+        for(Review t: listofReviews) {
+            if (t == r) {
+                status = true;
+                break;
+            }
+        }
+        return status;
+    }
+
     // Adding Learners into the session
-    public boolean addLearner(Learner l) {
+    public boolean addLearner(Learner l){
         boolean status = false;
         if (numberLearners < maxLearner && ((l.getGrade() == 0 &&  gradeLevel == 1) || (l.getGrade() != 0 &&  l.getGrade() == gradeLevel -1)))  {
             listOfLearners.add(l);
@@ -72,7 +96,7 @@ public class Session {
         String msg =  "Day: " + timeslot.getDay() + "\nTime:" + timeslot.getTime() + "\nGrade Level: " + gradeLevel + "\nCoachName: " + coachName + "\nNumber of Learner:" +
                 numberLearners + "\n";
         for(Review r: listofReviews ){
-            msg += "Review: (" + r.getComments() +"," + r.getRating() +  "\n";
+            msg += "Review: (" + r.getComment() +"," + r.getRating() +  "\n";
         }
         for(Learner l: listOfLearners ){
             msg += "Learner Name: " + l.getName() + "\n";
@@ -88,7 +112,7 @@ public class Session {
         System.out.println("Session Coach Name : " + coachName);
         System.out.println("Number of Learners : " + numberLearners);
         for(Review r: listofReviews ){
-            System.out.println("Review: (" + r.getComments() +"," + r.getRating());
+            System.out.println("Review: (" + r.getComment() +"," + r.getRating());
         }
         for(Learner l: listOfLearners ){
             System.out.println("Learner Name: " + l.getName());
