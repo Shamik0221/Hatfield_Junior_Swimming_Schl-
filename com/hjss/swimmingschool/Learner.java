@@ -101,11 +101,15 @@ public class Learner {
     }
 
     public void bookSession(Session s){
-        sessionBooked.add(s);
+        if (findInCompletedSession(s) == false) {
+            sessionBooked.add(s);
+        }
     }
 
     public void cancelSession(Session s){
-        sessionBooked.remove(s);
+        if (findInCompletedSession(s) == true) {
+            sessionBooked.remove(s);
+        }
     }
 
     public void updateSession(Session s) {
@@ -136,7 +140,7 @@ public class Learner {
     
     @Override
     public String toString() {
-        return name + ", " + age + "," + gender + ",(" + phone + "), (" + emergencyContact + ")" + grade ;
+        return name + ", " + age + ", " + gender + ", (" + phone + "), (" + emergencyContact + "), " + grade ;
     }
 
     public void printInfo() {
@@ -145,7 +149,7 @@ public class Learner {
         System.out.println("Learner Gender   : " + gender);
         System.out.println("Learner Age      : " + age);
         System.out.println("Learner Phone    : " + phone);
-        System.out.println("Learner EmerPhone: " + emergencyContact);
+        System.out.println("Learner Emergency Contact Phone: " + emergencyContact);
         System.out.println("Learner Grade    : " + grade);
         System.out.println("Completed Session :");
         for(Session s : sessionCompleted) {

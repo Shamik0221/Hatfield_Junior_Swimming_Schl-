@@ -81,7 +81,7 @@ public class Session {
     // Adding Learners into the session
     public boolean addLearner(Learner l){
         boolean status = false;
-        if (numberLearners < maxLearner && ((l.getGrade() == 0 &&  gradeLevel == 1) || (l.getGrade() != 0 &&  l.getGrade() == gradeLevel -1)))  {
+        if ((numberLearners < maxLearner) && ((l.getGrade() == gradeLevel -1) || (l.getGrade() == gradeLevel)))  {
             listOfLearners.add(l);
             numberLearners++;
             status = true;
@@ -93,13 +93,13 @@ public class Session {
 
     @Override
     public String toString() {
-        String msg =  "Day: " + timeslot.getDay() + "\nTime:" + timeslot.getTime() + "\nGrade Level: " + gradeLevel + "\nCoachName: " + coachName + "\nNumber of Learner:" +
+        String msg =  "Week " + timeslot.getWeek() +   "\nDay: " + timeslot.getDay() + "\nTime:" + timeslot.getTime() + "\nGrade Level: " + gradeLevel + "\nCoachName: " + coachName + "\nNumber of Learner:" +
                 numberLearners + "\n";
+        for(Learner l: listOfLearners ){
+            msg += "Learner Name: " + l.getName() +  " : " + l.getGrade() + "\n";
+        }
         for(Review r: listofReviews ){
             msg += "Review: (" + r.getComment() +"," + r.getRating() +  "\n";
-        }
-        for(Learner l: listOfLearners ){
-            msg += "Learner Name: " + l.getName() + "\n";
         }
 
         return msg;
@@ -111,12 +111,11 @@ public class Session {
         System.out.println("Session Timeslot   : " + timeslot);
         System.out.println("Session Coach Name : " + coachName);
         System.out.println("Number of Learners : " + numberLearners);
+        for(Learner l: listOfLearners ){
+            System.out.println("Learner Name: " + l.getName() + " : " + l.getGrade());
+        }
         for(Review r: listofReviews ){
             System.out.println("Review: (" + r.getComment() +"," + r.getRating());
         }
-        for(Learner l: listOfLearners ){
-            System.out.println("Learner Name: " + l.getName());
-        }
-
     }
 }
