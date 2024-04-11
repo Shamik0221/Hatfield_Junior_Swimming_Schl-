@@ -1,7 +1,7 @@
 package com.hjss.swimmingschool;
 
 
-public class TimeSlot {
+public class TimeSlot  implements java.io.Serializable {
 
 
     private String day = "";

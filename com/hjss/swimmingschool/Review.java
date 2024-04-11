@@ -1,8 +1,6 @@
 package com.hjss.swimmingschool;
 
-import java.util.UUID;
-
-public class Review {
+public class Review implements java.io.Serializable {
 
     private static int sequence = 40001;
     private int id;

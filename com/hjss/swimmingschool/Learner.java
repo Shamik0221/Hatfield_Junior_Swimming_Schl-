@@ -1,7 +1,7 @@
 package com.hjss.swimmingschool;
 import java.util.ArrayList;
 
-public class Learner {
+public class Learner  implements java.io.Serializable {
 
     private static int sequence = 10001;
     private int id;

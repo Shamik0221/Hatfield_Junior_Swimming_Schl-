@@ -1,11 +1,10 @@
 package com.hjss.swimmingschool;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 
 
-public class SessionManager {
+public class SessionManager implements java.io.Serializable {
 
     private ArrayList<Coach> listOfCoaches;
     private ArrayList<Session> listOfSessions ;
@@ -103,6 +102,11 @@ public class SessionManager {
     }
 
 
+    public String inputName(String object) {
+        String name = " ";
+        System.out.print("Enter the "+ object + ": ");
+        return name ;
+    }
 
     public void registerLearner() {
 

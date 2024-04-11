@@ -6,7 +6,8 @@ import java.io.ObjectOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
-import java.io.FileNotFoundException;
+import java.lang.ClassNotFoundException;
+
 import java.util.Scanner;  // Import the Scanner class
 import java.util.ArrayList;
 import java.util.List;
@@ -89,15 +90,11 @@ public class Driver {
         try {
             ois = new ObjectInputStream(new FileInputStream(fileName));
             ssm = (SessionManager) ois.readObject();
-        }catch (FileNotFoundException e) {
-            System.out.println("1");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error: IOException is caught!");
         } catch (ClassNotFoundException e) {
-            System.out.println("3");
-        } catch (ClassCastException e) {
-                System.out.println("4");
-        } finally {
+            System.out.println("ClassNotfound is caught!");
+        }finally {
             if (ois != null) {
                 try {
                     ois.close();
@@ -109,6 +106,26 @@ public class Driver {
 
         return ssm; 
     }
+
+    public static void writeDataBase(SessionManager ssm){
+        String fileName= "database.obj";
+        ObjectOutputStream oos = null;
+        try {
+            oos = new ObjectOutputStream(new FileOutputStream(fileName));
+            oos.writeObject(ssm);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (oos != null) {
+                try {
+                    oos.close();
+                } catch (IOException e) {
+                    System.out.println("4");
+                }
+            }
+        }
+    }
+
 
     public static SessionManager readFile() throws IOException{
         String filename = "defaultInput.txt";
@@ -182,28 +199,6 @@ public class Driver {
         return ssm;
     }
 
-    public static void writeDataBase(SessionManager ssm){
-        String fileName= "database.obj";
-        ObjectOutputStream oos = null;
-        try {
-            oos = new ObjectOutputStream(new FileOutputStream(fileName));
-            oos.writeObject(ssm);
-        }catch (FileNotFoundException e) {
-            System.out.println("1");
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassCastException e) {
-            System.out.println("4");
-        } finally {
-            if (oos != null) {
-                try {
-                    oos.close();
-                } catch (IOException e) {
-                    System.out.println("4");
-                }
-            }
-        }
-    }
 
     private static void displayMenu() {
         System.out.println("\n*************************************");

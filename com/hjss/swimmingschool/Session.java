@@ -3,7 +3,7 @@ package com.hjss.swimmingschool;
 import java.util.Arrays;
 import java.util.ArrayList;
 
-public class Session {
+public class Session implements java.io.Serializable{
 
     private static int sequence = 30001;
     private static int maxLearner = 4;

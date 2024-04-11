@@ -1,6 +1,6 @@
 package com.hjss.swimmingschool;
 
-public class Coach {
+public class Coach  implements java.io.Serializable {
 
     // Data Variable for the class
     private static int sequence = 20001;
