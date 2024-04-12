@@ -64,12 +64,12 @@ public class Driver {
                          break;
 
                 case 7: ssm = readFile();
-                        ssm.printCoachs();
-                        ssm.printSessions();
-                        ssm.printLearners();
                         break;
 
-                case 8 : run = false;
+                case 8 : ssm.printReport()l
+                         break;
+
+                case 9 : run = false;
                          break;
 
                 default: System.out.println("Invalid Options!");
@@ -210,7 +210,8 @@ public class Driver {
         System.out.println("5. Change a Session: ");
         System.out.println("6. Write a Review for a Session: ");
         System.out.println("7. Read a file ");
-        System.out.println("8. Exit ");
+        System.out.println("8. Print Report for all Session: ");
+        System.out.println("9. Exit ");
         System.out.println("*************************************");
     }
 }

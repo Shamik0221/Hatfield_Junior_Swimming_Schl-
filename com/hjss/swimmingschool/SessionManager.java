@@ -100,7 +100,22 @@ public class SessionManager implements java.io.Serializable {
         }
         return false;
     }
-
+    
+    public void printReport() {
+        System.out.println("Coach Registered: ");
+        System.out.println("******************************************");
+        printCoachs();
+        System.out.println("******************************************");
+        System.out.println("Learner Registered: ");
+        System.out.println("******************************************");
+        printLearners();
+        System.out.println("******************************************");
+        System.out.println("Session Booked: ");
+        System.out.println("******************************************");
+        printSessions();
+        System.out.println("******************************************");
+    }
+        
 
     public String inputName(String object) {
         String name = " ";
