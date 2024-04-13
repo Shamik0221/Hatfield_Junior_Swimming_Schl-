@@ -6,68 +6,56 @@ import java.util.Arrays;
 
 public class SessionManager implements java.io.Serializable {
 
-    private ArrayList<Coach> listOfCoaches;
-    private ArrayList<Session> listOfSessions ;
-    private ArrayList<Learner> listofLearners;
-
-    private String dayChoice;
-
+    private ArrayList<Coach> listCoaches;
+    private ArrayList<Session> listSessions ;
+    private ArrayList<Learner> listLearners;
 
     public SessionManager(){
-        listOfCoaches  = new ArrayList<Coach>();
-        listOfSessions  = new ArrayList<Session>();
-        listofLearners  = new ArrayList<Learner>();
+        listCoaches  = new ArrayList<Coach>();
+        listSessions  = new ArrayList<Session>();
+        listLearners  = new ArrayList<Learner>();
     }
     
-    public void addCoach(Coach c) {
-        listOfCoaches.add(c);
+    // Returns the Learner, Coach and Session from the list by index
+    public Learner  getLearner(int index) {
+        return listLearners.get(index);
     }
-    
-    public String getCoachName(int index) {
-        return listOfCoaches.get(index).getName();
+
+    public Coach getCoach(int index) {
+        return listCoaches.get(index);
     }
 
     public Session getSession(int index) {
-        return listOfSessions.get(index);
+        return listSessions.get(index);
+    }
+   
+    // Getting function which returns the number of members in Coachs, Learners, and Sessions
+    public int getNumberLearners() {
+        return listLearners.size();
     }
     
     public int getNumberCoaches() {
-        return listOfCoaches.size();
+        return listCoaches.size();
     }
     
     public int getNumberSessions() {
-        return listOfSessions.size();
+        return listSessions.size();
     }
     
-    public void printCoachs() {
-        for(Coach c : listOfCoaches)
-            System.out.println(c);
+    // Adding Coach, Learner and Session into the respective Lists
+    public void addCoach(Coach c) {
+        listCoaches.add(c);
+    }
+
+    public void addLearner(Learner l) {
+        listLearners.add(l);
     }
 
     public void addSession(Session s) {
-        listOfSessions.add(s);
+        listSessions.add(s);
     }
     
-    public void printSessions() {
-        for(Session s : listOfSessions ) {
-            System.out.println(s);
-        }
-    }
-    
-    public void addLearner(Learner l) {
-        listofLearners.add(l);
-    }
-    
-    public void printLearners() {
-        for(Learner l : listofLearners) {
-            System.out.println(l);
-        }
-    }
-    
-    public boolean bookSession(Session s, Learner l) {
-        return s.addLearner(l);
-    }
-
+    // generateSlots helper function to generate list of TimeSlot
     public ArrayList<TimeSlot> generateSlots() {
         ArrayList<String> days = new ArrayList<String>(Arrays.asList("Monday","Wednesday","Friday","Saturday"));
         ArrayList<String> times = new ArrayList<String>(Arrays.asList("2","3","4","5","6"));
@@ -90,6 +78,7 @@ public class SessionManager implements java.io.Serializable {
 
     }
     
+    // isValidSlot function check the TimeSlot which is valid
     public boolean isValidSlot(String day, String time, int weekNumber ) {
         TimeSlot temp = new TimeSlot(day,time,weekNumber);
         ArrayList<TimeSlot> validTimeSlots = generateSlots();
@@ -101,21 +90,51 @@ public class SessionManager implements java.io.Serializable {
         return false;
     }
     
-    public void printReport() {
-        System.out.println("Coach Registered: ");
+    // Printing the Coach in the list
+    public void printCoachs() {
+        int index = 0;
+        for(index=0; index < listCoaches.size(); index++ ){
+            System.out.println("Coach["+index+"]: " + listCoaches.get(index));
+        }
+    }
+
+    // Printing the Session in the list
+    public void printSessions() {
+        int index = 0;
+        for(index=0; index < listSessions.size(); index++ ){
+            System.out.println("Session["+index+"]:\n" + listSessions.get(index));
+        }
+    }
+    
+    // Printing the Learner in the list
+    public void printLearners() {
+        int index = 0;
+        for(index=0; index < listLearners.size(); index++ ){
+            System.out.println("Learner["+index+"]: " + listLearners.get(index));
+        }
+    }
+    
+    // printing the report and number of Learners 
+    public void displayReport() {
+        System.out.println("Coach Registered: " + getNumberCoaches());
         System.out.println("******************************************");
         printCoachs();
         System.out.println("******************************************");
-        System.out.println("Learner Registered: ");
+        System.out.println("Learner Registered: "+ getNumberLearners());
         System.out.println("******************************************");
         printLearners();
         System.out.println("******************************************");
-        System.out.println("Session Booked: ");
+        System.out.println("Session Booked: "+ + getNumberSessions());
         System.out.println("******************************************");
         printSessions();
         System.out.println("******************************************");
+
     }
         
+    // Booking a session in Session by adding a learner 
+    public boolean bookSession(Session s, Learner l) {
+        return s.addLearner(l);
+    }
 
     public String inputName(String object) {
         String name = " ";
@@ -123,15 +142,11 @@ public class SessionManager implements java.io.Serializable {
         return name ;
     }
 
-    public void registerLearner() {
-
+    public void registerLearner(Learner l) {
+        listLearners.add(l);
     }
 
     public void registerCoach() {
-
-    }
-
-    public void bookSession() {
 
     }
 
@@ -146,4 +161,8 @@ public class SessionManager implements java.io.Serializable {
     public void writeReview(){
 
     }
+
+    public void bookSession() {
+    }
+
 }

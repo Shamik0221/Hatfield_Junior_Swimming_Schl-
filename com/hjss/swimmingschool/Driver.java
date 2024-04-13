@@ -18,6 +18,7 @@ public class Driver {
 
     private static SessionManager ssm;
     private static Random randomGenerator = new Random();
+
     public static void main(String[] args) throws Exception {
 
         // creating an object of Scanner Class
@@ -32,7 +33,12 @@ public class Driver {
         boolean run = true;
         // Runing a loop until user choose to exit
         
-        // read database.txt file
+        // temperarory Session variable, Coach and Learner for processing
+        Session s;
+        Coach c;
+        Learner l;
+
+        // read database.obj file
         ssm = readDatabase();
 
         while (run) {
@@ -45,7 +51,8 @@ public class Driver {
 
             switch(optionNumber) {
             
-                case 1 : ssm.registerLearner();
+                case 1 : l = promptLearner(sc);
+                         ssm.registerLearner(l);
                          break;
 
                 case 2 : ssm.registerCoach();
@@ -63,13 +70,10 @@ public class Driver {
                 case 6 : ssm.writeReview();
                          break;
 
-                case 7: ssm = readFile();
-                        break;
-
-                case 8 : ssm.printReport()l
+                case 7 : ssm.displayReport();
                          break;
 
-                case 9 : run = false;
+                case 8 : run = false;
                          break;
 
                 default: System.out.println("Invalid Options!");
@@ -82,6 +86,31 @@ public class Driver {
 
     }
 
+    public static String getString(Scanner sc, String msg) {
+        System.out.print(msg);
+        String value = sc.next();
+        return value;
+    }
+
+    public static int getInt(Scanner sc, String msg) {
+        System.out.print(msg);
+        int value = sc.nextInt();
+        return value;
+    }
+
+
+    public static Learner promptLearner(Scanner sc) {
+        String name =  getString(sc, "Enter the Learner's Name: ");
+        String gender =  getString(sc, "Enter the Learner's Gender: ");
+        int age =  getInt(sc, "Enter the Learner's Age: ");
+        String phone =  getString(sc, "Enter the Learner's Phone: ");
+        String emergency =  getString(sc, "Enter the Learner's Emergency Contact: ");
+        int gradeLevel =  getInt(sc, "Enter the Learner's Grade Level: ");
+        Learner l = new Learner(name,gender,age,phone,emergency,gradeLevel);
+        return l;
+    }
+    
+    // Loading the database from database.obj file
     public static SessionManager readDatabase() {
         String fileName= "database.obj";
         ObjectInputStream ois = null;
@@ -92,8 +121,18 @@ public class Driver {
             ssm = (SessionManager) ois.readObject();
         } catch (IOException e) {
             System.out.println("Error: IOException is caught!");
+            try { 
+                ssm = readFile();
+            }catch (IOException e1) {
+                ssm = new SessionManager();
+            }
         } catch (ClassNotFoundException e) {
             System.out.println("ClassNotfound is caught!");
+            try { 
+                ssm = readFile();
+            }catch (IOException e1) {
+                ssm = new SessionManager();
+            }
         }finally {
             if (ois != null) {
                 try {
@@ -107,6 +146,7 @@ public class Driver {
         return ssm; 
     }
 
+    // Writing the database into the database.obj file
     public static void writeDataBase(SessionManager ssm){
         String fileName= "database.obj";
         ObjectOutputStream oos = null;
@@ -127,6 +167,7 @@ public class Driver {
     }
 
 
+    // First Time Initialize the data from loading 
     public static SessionManager readFile() throws IOException{
         String filename = "defaultInput.txt";
         SessionManager ssm = new SessionManager();
@@ -147,7 +188,7 @@ public class Driver {
                     for (TimeSlot t: timeslots ) {
                             int index = randomGenerator.nextInt(ssm.getNumberCoaches());
                             int gradeLevel = randomGenerator.nextInt(5);
-                            Session s = new Session(t, ssm.getCoachName(index),gradeLevel);
+                            Session s = new Session(t, ssm.getCoach(index).getName(),gradeLevel);
                             ssm.addSession(s);
                     }
                 }
@@ -184,8 +225,10 @@ public class Driver {
                             int sessionIndex = randomGenerator.nextInt(ssm.getNumberSessions());
                             Session s = ssm.getSession(sessionIndex);
                             boolean status = ssm.bookSession(s,l);
-                            if (status) 
+                            if (status) {
                                 bookingDone += 1;
+                                ssm.addLearner(l);
+                            }
                         }
                     }
                 }
@@ -209,9 +252,8 @@ public class Driver {
         System.out.println("4. Cancel a Session: ");
         System.out.println("5. Change a Session: ");
         System.out.println("6. Write a Review for a Session: ");
-        System.out.println("7. Read a file ");
-        System.out.println("8. Print Report for all Session: ");
-        System.out.println("9. Exit ");
+        System.out.println("7. Print Report for all Session: ");
+        System.out.println("8. Exit ");
         System.out.println("*************************************");
     }
 }

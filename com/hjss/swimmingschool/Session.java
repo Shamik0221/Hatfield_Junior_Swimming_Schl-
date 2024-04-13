@@ -81,11 +81,11 @@ public class Session implements java.io.Serializable{
     // Adding Learners into the session
     public boolean addLearner(Learner l){
         boolean status = false;
-        if ((numberLearners < maxLearner) && ((l.getGrade() == gradeLevel -1) || (l.getGrade() == gradeLevel)))  {
-            listOfLearners.add(l);
-            numberLearners++;
+        if ((numberLearners <= maxLearner) && ((l.getGrade() == gradeLevel -1) || (l.getGrade() == gradeLevel)))  {
             status = true;
             l.bookSession(this);
+            listOfLearners.add(l);
+            numberLearners++;
         }
         return status;
     }
@@ -95,9 +95,11 @@ public class Session implements java.io.Serializable{
     public String toString() {
         String msg =  "Week " + timeslot.getWeek() +   "\nDay: " + timeslot.getDay() + "\nTime:" + timeslot.getTime() + "\nGrade Level: " + gradeLevel + "\nCoachName: " + coachName + "\nNumber of Learner:" +
                 numberLearners + "\n";
+        msg += "Learner Name: ";
         for(Learner l: listOfLearners ){
-            msg += "Learner Name: " + l.getName() +  " : " + l.getGrade() + "\n";
+            msg +=  "(" + l.getName() +  "," + l.getGrade() + ") ";
         }
+        msg += "\n";
         for(Review r: listofReviews ){
             msg += "Review: (" + r.getComment() +"," + r.getRating() +  "\n";
         }

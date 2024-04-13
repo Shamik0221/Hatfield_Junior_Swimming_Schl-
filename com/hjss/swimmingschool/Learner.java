@@ -140,7 +140,7 @@ public class Learner  implements java.io.Serializable {
     
     @Override
     public String toString() {
-        return name + ", " + age + ", " + gender + ", (" + phone + "), (" + emergencyContact + "), " + grade ;
+        return "Name:" + name + ", Gender:" + gender + ", Age: " + age + ", Phone: " + phone + " , Emergency Contact: " + emergencyContact + " , Grade Level: " + grade ;
     }
 
     public void printInfo() {

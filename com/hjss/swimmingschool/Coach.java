@@ -67,7 +67,7 @@ public class Coach  implements java.io.Serializable {
     
     @Override
     public String toString() {
-        return name + ", " + age + "," + gender + ",(" + phone + ") " + yearOfExperience;
+        return "Name: " + name + ", Gender: " + gender + ", Age: " + age + ", Phone: " + phone + ", Experience: " + yearOfExperience + " years";
     }
     
 
