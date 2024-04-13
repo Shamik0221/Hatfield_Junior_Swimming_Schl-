@@ -155,7 +155,7 @@ public class SessionManager implements java.io.Serializable {
     public void displayLearnerBookedSession(Learner l){
         int index = 0;
         for(index=0; index < listSessions.size(); index++ ){
-            if (listSessions.get(index).findLearner(l)){
+            if (listSessions.get(index).isLearnerExists(l)){
                 System.out.println("Session["+index+"]:\n" + listSessions.get(index));
             }
         }
@@ -211,6 +211,18 @@ public class SessionManager implements java.io.Serializable {
         return s.removeLearner(l);
     }
 
+    public boolean  changeSession(Session os, Session ns, Learner l) {
+        boolean status = os.removeLearner(l);
+        if (status) {
+            status = ns.addLearner(l);
+            if (status)
+                return true;
+            else
+                return false;
+        }
+        return status;
+    }
+
 
     public String inputName(String object) {
         String name = " ";
@@ -226,10 +238,6 @@ public class SessionManager implements java.io.Serializable {
         listCoaches.add(c);
     }
 
-
-    public void changeSession() {
-
-    }
 
     public void writeReview(){
 

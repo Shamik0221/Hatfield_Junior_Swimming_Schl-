@@ -60,7 +60,7 @@ public class Session implements java.io.Serializable{
         listofReviews.add(r);
     }
 
-    public boolean findLearner(Learner l) {
+    public boolean isLearnerExists(Learner l) {
         boolean status = false;
         for(Learner t: listOfLearners) {
             if (t == l) {
@@ -71,7 +71,7 @@ public class Session implements java.io.Serializable{
         return status;
     }
 
-    public boolean findReview (Review r) {
+    public boolean isReviewExists(Review r) {
         boolean status = false;
         for(Review t: listofReviews) {
             if (t == r) {
@@ -97,8 +97,14 @@ public class Session implements java.io.Serializable{
     // Adding Learners into the session
     public boolean removeLearner(Learner l){
         boolean status = false;
-        if (findLearner(l)) {
-            l.cancelSession( this);
+        if (isLearnerExists(l)) {
+            int index = 0;
+            for(;index < listOfLearners.size(); index++){
+                if ( l.getName() == listOfLearners.get(index).getName() )
+                    break;
+            }
+            l.cancelSession(this);
+            listOfLearners.remove(l);
             numberLearners--;
             status = true;
         }

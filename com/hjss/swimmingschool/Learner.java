@@ -101,13 +101,13 @@ public class Learner  implements java.io.Serializable {
     }
 
     public void bookSession(Session s){
-        if (findInCompletedSession(s) == false) {
+        if (findInBookedSession(s) == false) {
             sessionBooked.add(s);
         }
     }
 
     public void cancelSession(Session s){
-        if (findInCompletedSession(s) == true) {
+        if (findInBookedSession(s) == true) {
             sessionBooked.remove(s);
         }
     }
