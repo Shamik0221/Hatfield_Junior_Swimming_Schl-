@@ -40,8 +40,9 @@ public class Driver {
         Session s,ns;
         Coach c;
         Learner l;
-        String name;
-        boolean status ;
+        String name, coachName;
+        boolean status = false ;
+
         // read database.obj file
         ssm = readDatabase();
 
@@ -114,8 +115,26 @@ public class Driver {
                              System.out.println("Reschedule of booking is Unsucessful!");
                          break;
 
-                case 5 : ssm.writeReview();
-                         break;
+                case 5 :  name = getString(sc, "Enter the Learner's Name: ");
+                         if (ssm.isLearnerRegister(name)) {
+                             l = ssm.findLearner(name);
+                         }
+                         else {
+                             System.out.println("Warning: " + name + " is not registered in the Learners!");
+                             break;
+                         }
+                         l.printCompletedSession();
+                         coachName = getString(sc, "For Whom you want to write Review: ");
+                         if (l.isfindCoachInCompletedSession(coachName)) {
+                            String comment = getString(sc, "Enter the review comment as a line: ");
+                            int rating = getInt(sc, "Enter the review rating: ",1,5,"Warning: Please enter the integer only!");
+                            Review r = new Review(l.getName(), rating,comment);
+                            c = ssm.findCoach(coachName);
+                            c.addReview(r);
+                         }
+                         else {
+                             System.out.println("Warning: you didn't complete any session with Coach: " + coachName +"!");
+                         }
 
                 case 6 : ssm.displaySessionReport();
                          break;
@@ -333,8 +352,8 @@ public class Driver {
                         line = reader.readLine();
                         List<String> gradeList = Arrays.asList(line.split(","));
                         int bookingDone = 0;
-                        while (bookingDone < 50) {
-                            int nameIndex = randomGenerator.nextInt(nameList.size());
+                        int nameIndex = 0;
+                        while (bookingDone < 40) {
                             int genderIndex = randomGenerator.nextInt(genderList.size());
                             int ageIndex = randomGenerator.nextInt(ageList.size());
                             int phoneIndex = randomGenerator.nextInt(phoneList.size());
@@ -345,10 +364,26 @@ public class Driver {
                             Session s = ssm.getSession(sessionIndex);
                             boolean status = ssm.bookSession(s,l);
                             if (status) {
+                                nameIndex += 1;
                                 bookingDone += 1;
                                 ssm.addLearner(l);
                             }
                         }
+                        int completedDone = 0;
+                        while (completedDone < 10) {
+                            int sessionIndex = randomGenerator.nextInt(ssm.getNumberSessions());
+                            Session s = ssm.getSession(sessionIndex);
+                            if (s.getNumberLearners() > 0 ) {
+                                int learnerIndex = randomGenerator.nextInt(s.getNumberLearners());
+                                Learner l = s.getLearner(learnerIndex);
+                                s.removeLearner(l);
+                                l.updateSession(s);
+                                completedDone++;
+                            }
+                        }
+
+
+
                     }
                 }
                 line = reader.readLine();
@@ -363,8 +398,9 @@ public class Driver {
 
 
     private static void displayMenu() {
-        System.out.println("\n*************************************");
-        System.out.println("Select the below Options [1-7]");
+        System.out.println("\n*********************************************************");
+        System.out.println("Select the below Options [1-10]");
+        System.out.println("*********************************************************");
         System.out.println("1. Register a Learner");
         System.out.println("2. Book a Session");
         System.out.println("3. Cancel a Session");
@@ -375,6 +411,7 @@ public class Driver {
         System.out.println("8. Display Coach Report");
         System.out.println("9. Display Monthly Report");
         System.out.println("10. Exit ");
-        System.out.println("*************************************");
+        System.out.println("*********************************************************");
+
     }
 }

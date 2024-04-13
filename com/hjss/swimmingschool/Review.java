@@ -6,6 +6,7 @@ public class Review implements java.io.Serializable {
     private int id;
     public String comment;
     public int rating;
+    public String reviewer;
 
     public Review () {
         this.id = sequence++; 
@@ -15,8 +16,9 @@ public class Review implements java.io.Serializable {
 
 
 
-    public Review (int rating, String comment) {
-        this.id = sequence++; 
+    public Review (String reviewer, int rating, String comment) {
+        this.id = sequence++;
+        this.reviewer = reviewer;
         this.rating = rating;
         this.comment = comment;
     }
@@ -39,11 +41,11 @@ public class Review implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return comment + " " + rating;
+        return comment + " " + rating + " " + reviewer;
     }
 
     public void printInfo() {
-        System.out.println("Review Id       : " + id);
+        System.out.println("Reviewer       : " + reviewer);
         System.out.println("Review Rating   : " + rating);
         System.out.println("Review Comments : " + comment);
     }

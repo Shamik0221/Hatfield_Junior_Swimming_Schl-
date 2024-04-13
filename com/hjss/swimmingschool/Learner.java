@@ -100,6 +100,16 @@ public class Learner  implements java.io.Serializable {
         return status;
     }
 
+    public boolean isfindCoachInCompletedSession(String coachName) {
+        boolean status = false;
+        for(Session t: sessionCompleted) {
+            if (t.getCoach().equals(coachName)) {
+                status = true;
+                break;
+            }
+        }
+        return status;
+    }
     public void bookSession(Session s){
         if (findInBookedSession(s) == false) {
             sessionBooked.add(s);
@@ -137,13 +147,28 @@ public class Learner  implements java.io.Serializable {
 
         }
     }
-    
+   
     @Override
     public String toString() {
         return "Name:" + name + ", Gender:" + gender + ", Age: " + age + ", Phone: " + phone + " , Emergency Contact: " + emergencyContact + " , Grade Level: " + grade ;
     }
+    
+    public void printCompletedSession() {
+        int index = 0;
+        boolean printFlag = false;
+        System.out.println("*********************************************************");
+        for(;index < sessionCompleted.size(); index++) {
+            System.out.println(sessionCompleted.get(index));
+            if (index != sessionCompleted.size()-1)
+                System.out.println("--------------------------------------------------------");
+            printFlag = true;
+        }
+        if (printFlag)
+            System.out.println("*********************************************************");
+    }
 
     public void printInfo() {
+        System.out.println('\n');
         System.out.println("Learner Id       : " + id);
         System.out.println("Learner Name     : " + name);
         System.out.println("Learner Gender   : " + gender);
@@ -151,14 +176,18 @@ public class Learner  implements java.io.Serializable {
         System.out.println("Learner Phone    : " + phone);
         System.out.println("Learner Emergency Contact Phone: " + emergencyContact);
         System.out.println("Learner Grade    : " + grade);
-        System.out.println("Completed Session :");
-        for(Session s : sessionCompleted) {
-            System.out.println(s);
+        System.out.println("Completed Session: " + sessionCompleted.size() );
+        int index = 0;
+        for(;index < sessionCompleted.size(); index++) {
+            System.out.println(sessionCompleted.get(index));
+            System.out.println("");
         }
-        System.out.println("Booked Session   :");
-        for(Session s : sessionBooked) {
-            System.out.println(s);
+        System.out.println("Booked Session: " +  sessionBooked.size() );
+        for(;index < sessionBooked.size(); index++) {
+            System.out.println(sessionBooked.get(index));
+            System.out.println("");
         }
+        System.out.println('\n');
     }
 }
 

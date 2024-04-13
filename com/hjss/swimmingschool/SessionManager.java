@@ -78,6 +78,19 @@ public class SessionManager implements java.io.Serializable {
 
     }
 
+    // findCoach
+    public Coach findCoach(String coachName) {
+        Coach c = null;
+        int index = 0;
+        for(; index< listCoaches.size(); index++) {
+            if (listCoaches.get(index).getName().equals(coachName)) {
+                c = listCoaches.get(index);
+                break;
+            }
+        }
+        return c;
+    }
+
     // findSession function check the TimeSlot which is valid
     public Session findSession(String day, String time, int weekNumber ) {
         TimeSlot temp = new TimeSlot(day,time,weekNumber);
@@ -160,10 +173,9 @@ public class SessionManager implements java.io.Serializable {
             }
         }
     }
+
     public void displayUpComingSession() {
-        System.out.println("******************************************");
-        System.out.println("Session Available: ");
-        System.out.println("******************************************");
+        System.out.println("\nSession Available: ");
         for(Session s : listSessions) {
             if (s.getNumberLearners() < 4){
                 System.out.println(s);
@@ -172,33 +184,42 @@ public class SessionManager implements java.io.Serializable {
     }
 
     public void displaySessionReport() {
+        System.out.println("\n");
+        int index = 0;
+        System.out.println("Session Booked: ");
+        for(; index < listSessions.size(); index++) {
+            listSessions.get(index).printInfo();
 
+        }
     }
 
     public void displayLearnerReport() {
-
+        System.out.println("\n");
+        int index = 0;
+        for(; index < listLearners.size(); index++) {
+            listLearners.get(index).printInfo();
+        }
     }
 
-
     public void displayCoachReport() {
-
+        System.out.println("\n");
+        int index = 0;
+        for(; index < listCoaches.size(); index++) {
+            listCoaches.get(index).printInfo();
+        }
     }
 
 
     // printing the report and number of Learners 
     public void displayMonthlyReport() {
+        System.out.println("********************************************************************************8");
         System.out.println("Coach Registered: " + getNumberCoaches());
-        System.out.println("******************************************");
-        printCoachs();
-        System.out.println("******************************************");
+        displayCoachReport(); 
         System.out.println("Learner Registered: "+ getNumberLearners());
-        System.out.println("******************************************");
-        printLearners();
-        System.out.println("******************************************");
+        displayLearnerReport();
         System.out.println("Session Booked: "+ + getNumberSessions());
-        System.out.println("******************************************");
-        printSessions();
-        System.out.println("******************************************");
+        displaySessionReport(); 
+        System.out.println("********************************************************************************8");
 
     }
         
