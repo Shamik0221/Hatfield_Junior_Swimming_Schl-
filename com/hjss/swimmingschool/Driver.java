@@ -7,6 +7,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.lang.ClassNotFoundException;
+import java.lang.IllegalArgumentException;
+import java.util.InputMismatchException;
+
 
 import java.util.Scanner;  // Import the Scanner class
 import java.util.ArrayList;
@@ -37,6 +40,7 @@ public class Driver {
         Session s;
         Coach c;
         Learner l;
+        String name;
 
         // read database.obj file
         ssm = readDatabase();
@@ -54,26 +58,52 @@ public class Driver {
                 case 1 : l = promptLearner(sc);
                          ssm.registerLearner(l);
                          break;
+                
+                case 2 : name = getString(sc, "Enter the Learner's Name: ");
+                         if (ssm.isLearnerRegister(name)) {
+                             l = ssm.findLearner(name);
+                         }
+                         else {
+                             l = promptLearner(sc);
+                             ssm.registerLearner(l);
+                         }
+                         ssm.displayUpComingSession();
+                         s = promptAndFindSession(sc);
+                         ssm.bookSession(s,l);
+                         break;
 
-                case 2 : ssm.registerCoach();
+                case 3 : name = getString(sc, "Enter the Learner's Name: ");
+                        if (ssm.isLearnerRegister(name)) {
+                        l = ssm.findLearner(name);
+                         }
+                        else {
+                            l = promptLearner(sc);
+                            ssm.registerLearner(l);
+                        }
+                        ssm.displayLearnerBookedSession(l);
+                        s = promptAndFindSession(sc);
+                        ssm.cancelSession(s,l);
+                        break;
+
+                case 4 : ssm.changeSession();
                          break;
                 
-                case 3 : ssm.bookSession();
+                case 5 : ssm.writeReview();
                          break;
 
-                case 4 : ssm.cancelSession();
+                case 6 : ssm.displaySessionReport();
                          break;
                 
-                case 5 : ssm.changeSession();
+                case 7 : ssm.displayLearnerReport();
+                         break;
+
+                case 8 : ssm.displayCoachReport();
                          break;
                 
-                case 6 : ssm.writeReview();
+                case 9 : ssm.displayMonthlyReport();
                          break;
 
-                case 7 : ssm.displayReport();
-                         break;
-
-                case 8 : run = false;
+                case 10 : run = false;
                          break;
 
                 default: System.out.println("Invalid Options!");
@@ -87,29 +117,72 @@ public class Driver {
     }
 
     public static String getString(Scanner sc, String msg) {
+        String value = "";
         System.out.print(msg);
-        String value = sc.next();
+        while (sc.hasNextLine()) {
+            value = sc.nextLine();
+            if (!value.isEmpty())
+                break;
+        }
         return value;
     }
 
-    public static int getInt(Scanner sc, String msg) {
-        System.out.print(msg);
-        int value = sc.nextInt();
-        return value;
+    public static int getInt(Scanner sc, String msg, int min, int max, String warning) {
+        boolean tryagain;
+        String value;
+        do {
+            System.out.print(msg);
+            value = sc.nextLine();
+            if (!value.matches("^[0-9]*")){
+                System.out.println("Enter only integer value!");
+                value  = sc.nextLine();
+                tryagain = true;
+            }
+            else {
+                int t = Integer.valueOf(value);
+                if (t >= min && t <= max) {
+                    tryagain = false;
+                }
+                else {
+                    System.out.println(warning);
+                    tryagain = true;
+                }
+            }
+        } while (tryagain); 
+        return Integer.valueOf(value);
     }
 
-
+    // Prompting Learner from user 
     public static Learner promptLearner(Scanner sc) {
         String name =  getString(sc, "Enter the Learner's Name: ");
         String gender =  getString(sc, "Enter the Learner's Gender: ");
-        int age =  getInt(sc, "Enter the Learner's Age: ");
+        int age =  getInt(sc, "Enter the Learner's Age: ",4,11,"Error: enter age between 4 to 11 inclusive.");
         String phone =  getString(sc, "Enter the Learner's Phone: ");
         String emergency =  getString(sc, "Enter the Learner's Emergency Contact: ");
-        int gradeLevel =  getInt(sc, "Enter the Learner's Grade Level: ");
+        int gradeLevel =  getInt(sc, "Enter the Learner's Grade Level: ",0,5,"Error: enter grade level between  0 to 5 inclusive.");
         Learner l = new Learner(name,gender,age,phone,emergency,gradeLevel);
         return l;
     }
-    
+
+    // Prompt and find Session for booking
+    public static Session promptAndFindSession(Scanner sc) {
+        Session s = null;
+        boolean tryagain;
+        do {
+            String day = getString(sc, "Enter the day of booking (Monday,Wednesday,Friday,Saturday: ");
+            String time = getString(sc, "Enter the time of booking (2-3pm,3-4pm,4-5pm,5-6pm,6-7pm): ");
+            int weekNumber = getInt(sc, "Enter the week of the booking (1,2,3,4):", 1, 4, "Error: enter week number between 1 to 4 inclusive.");
+            if (ssm.isValidSlot(day, time, weekNumber)) {
+                s = ssm.findSession(day,time,weekNumber);
+                tryagain = false;
+            } else {
+                tryagain = true;
+            }
+        } while (tryagain);
+        return s;
+    }
+
+
     // Loading the database from database.obj file
     public static SessionManager readDatabase() {
         String fileName= "database.obj";
@@ -246,14 +319,16 @@ public class Driver {
     private static void displayMenu() {
         System.out.println("\n*************************************");
         System.out.println("Select the below Options [1-7]");
-        System.out.println("1. Register a Learner: ");
-        System.out.println("2. Register a Coach: ");
-        System.out.println("3. Book a Session: ");
-        System.out.println("4. Cancel a Session: ");
-        System.out.println("5. Change a Session: ");
-        System.out.println("6. Write a Review for a Session: ");
-        System.out.println("7. Print Report for all Session: ");
-        System.out.println("8. Exit ");
+        System.out.println("1. Register a Learner");
+        System.out.println("2. Book a Session");
+        System.out.println("3. Cancel a Session");
+        System.out.println("4. Change a Session");
+        System.out.println("5. Write a Review for Coach");
+        System.out.println("6. Display Session Report");
+        System.out.println("7. Display Learner Report");
+        System.out.println("8. Display Coach Report");
+        System.out.println("9. Display Monthly Report");
+        System.out.println("10. Exit ");
         System.out.println("*************************************");
     }
 }

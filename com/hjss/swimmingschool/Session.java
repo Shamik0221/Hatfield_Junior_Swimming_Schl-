@@ -47,6 +47,10 @@ public class Session implements java.io.Serializable{
         return this.timeslot.getTime();
     }
 
+    public int getWeek() {
+        return this.timeslot.getWeek();
+    }
+
     public String getCoach(){
         return this.coachName;
     }
@@ -90,7 +94,21 @@ public class Session implements java.io.Serializable{
         return status;
     }
 
+    // Adding Learners into the session
+    public boolean removeLearner(Learner l){
+        boolean status = false;
+        if (findLearner(l)) {
+            l.cancelSession( this);
+            numberLearners--;
+            status = true;
+        }
+        return status;
+    }
 
+
+    public int getNumberLearners() {
+        return numberLearners;
+    }
     @Override
     public String toString() {
         String msg =  "Week " + timeslot.getWeek() +   "\nDay: " + timeslot.getDay() + "\nTime:" + timeslot.getTime() + "\nGrade Level: " + gradeLevel + "\nCoachName: " + coachName + "\nNumber of Learner:" +

@@ -58,16 +58,16 @@ public class SessionManager implements java.io.Serializable {
     // generateSlots helper function to generate list of TimeSlot
     public ArrayList<TimeSlot> generateSlots() {
         ArrayList<String> days = new ArrayList<String>(Arrays.asList("Monday","Wednesday","Friday","Saturday"));
-        ArrayList<String> times = new ArrayList<String>(Arrays.asList("2","3","4","5","6"));
+        ArrayList<String> times = new ArrayList<String>(Arrays.asList("2-3pm","3-4pm","4-5pm","5-6pm","6-7pm"));
         ArrayList<TimeSlot> slots = new ArrayList<TimeSlot>();
         for(int weekNumber=1; weekNumber<=4 ; weekNumber++ ) {
             for( String day : days) {
                 for( String time : times ) {
-                    if ((day == "Monday" || day == "Wednesday" || day == "Friday" ) && ( time != "2" && time != "3")) {
+                    if ((day == "Monday" || day == "Wednesday" || day == "Friday" ) && ( time != "2-3pm" && time != "3-4pm")) {
                         TimeSlot t = new TimeSlot(day,time,weekNumber);
                         slots.add(t);
                     }
-                    else if ((day == "Saturday")  && ( time == "2" || time == "3")) {
+                    else if ((day == "Saturday")  && ( time == "2-3pm" || time == "3-4pm")) {
                         TimeSlot t = new TimeSlot(day,time,weekNumber);
                         slots.add(t);
                     }
@@ -77,13 +77,27 @@ public class SessionManager implements java.io.Serializable {
         return slots;
 
     }
-    
+
+    // findSession function check the TimeSlot which is valid
+    public Session findSession(String day, String time, int weekNumber ) {
+        TimeSlot temp = new TimeSlot(day,time,weekNumber);
+        Session s = null;
+        int index = 0;
+        for(; index< listSessions.size(); index++) {
+            if (listSessions.get(index).getDay().equals(temp.getDay()) && listSessions.get(index).getTime().equals(temp.getTime()) && listSessions.get(index).getWeek() == temp.getWeek()) {
+                s = listSessions.get(index);
+                break;
+            }
+        }
+        return s;
+    }
+
     // isValidSlot function check the TimeSlot which is valid
     public boolean isValidSlot(String day, String time, int weekNumber ) {
         TimeSlot temp = new TimeSlot(day,time,weekNumber);
         ArrayList<TimeSlot> validTimeSlots = generateSlots();
         for(TimeSlot t : validTimeSlots) {
-            if ((t.getDay() == temp.getDay()) && ( t.getTime() == temp.getTime())) {
+            if (t.getDay().equals(temp.getDay()) && t.getTime().equals(temp.getTime()) && t.getWeek() == temp.getWeek()) {
                 return true;
             }
         }
@@ -113,9 +127,66 @@ public class SessionManager implements java.io.Serializable {
             System.out.println("Learner["+index+"]: " + listLearners.get(index));
         }
     }
-    
+
+    // Find Learner name in the registered Learner
+    public boolean isLearnerRegister(String name) {
+        int index = 0;
+        for(; index<listLearners.size(); index++){
+            if (listLearners.get(index).getName().equals(name) ){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Learner findLearner(String name) {
+        int index = 0;
+        Learner l = null;
+        for(; index<listLearners.size(); index++){
+            if (listLearners.get(index).getName().equals(name)){
+                l = listLearners.get(index);
+                break;
+            }
+        }
+        return l;
+    }
+
+
+    public void displayLearnerBookedSession(Learner l){
+        int index = 0;
+        for(index=0; index < listSessions.size(); index++ ){
+            if (listSessions.get(index).findLearner(l)){
+                System.out.println("Session["+index+"]:\n" + listSessions.get(index));
+            }
+        }
+    }
+    public void displayUpComingSession() {
+        System.out.println("******************************************");
+        System.out.println("Session Available: ");
+        System.out.println("******************************************");
+        for(Session s : listSessions) {
+            if (s.getNumberLearners() < 4){
+                System.out.println(s);
+            }
+        }
+    }
+
+    public void displaySessionReport() {
+
+    }
+
+    public void displayLearnerReport() {
+
+    }
+
+
+    public void displayCoachReport() {
+
+    }
+
+
     // printing the report and number of Learners 
-    public void displayReport() {
+    public void displayMonthlyReport() {
         System.out.println("Coach Registered: " + getNumberCoaches());
         System.out.println("******************************************");
         printCoachs();
@@ -136,6 +207,11 @@ public class SessionManager implements java.io.Serializable {
         return s.addLearner(l);
     }
 
+    public boolean cancelSession(Session s, Learner l) {
+        return s.removeLearner(l);
+    }
+
+
     public String inputName(String object) {
         String name = " ";
         System.out.print("Enter the "+ object + ": ");
@@ -146,13 +222,10 @@ public class SessionManager implements java.io.Serializable {
         listLearners.add(l);
     }
 
-    public void registerCoach() {
-
+    public void registerCoach(Coach c) {
+        listCoaches.add(c);
     }
 
-    public void cancelSession() {
-
-    }
 
     public void changeSession() {
 
@@ -160,9 +233,6 @@ public class SessionManager implements java.io.Serializable {
 
     public void writeReview(){
 
-    }
-
-    public void bookSession() {
     }
 
 }
