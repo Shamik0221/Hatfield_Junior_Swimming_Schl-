@@ -115,7 +115,32 @@ public class Driver {
                              System.out.println("Reschedule of booking is Unsucessful!");
                          break;
 
-                case 5 :  name = getString(sc, "Enter the Learner's Name: ");
+                case 5 : name = getString(sc, "Enter the Learner's Name: ");
+                         if (ssm.isLearnerRegister(name)) {
+                             l = ssm.findLearner(name);
+                         }
+                         else {
+                             System.out.println("Warning: " + name + " is not registered in the Learners!");
+                             break;
+                         }
+                         if (l.getNumberBooking() > 0 ) {
+                             ssm.displayLearnerBookedSession(l);
+                             s = promptSession(sc,"Select the already booked Session: ");
+                             if (l.isSessionExists(s) ) {
+                                 l.updateSession(s);
+                                 System.out.println("Learner has Attended Session!");
+                                 ssm.removeLearner(s,l);
+                             }
+                             else {
+                                 System.out.println("Learner didn't book the entered session!");
+                             }
+                         }
+                         else {
+                             System.out.println("Learner didn't book any session!");
+                         }
+
+                         break;
+                case 6 :  name = getString(sc, "Enter the Learner's Name: ");
                          if (ssm.isLearnerRegister(name)) {
                              l = ssm.findLearner(name);
                          }
@@ -136,19 +161,19 @@ public class Driver {
                              System.out.println("Warning: you didn't complete any session with Coach: " + coachName +"!");
                          }
 
-                case 6 : ssm.displaySessionReport();
+                case 7 : ssm.displaySessionReport();
                          break;
 
-                case 7 : ssm.displayLearnerReport();
+                case 8 : ssm.displayLearnerReport();
                          break;
 
-                case 8 : ssm.displayCoachReport();
+                case 9 : ssm.displayCoachReport();
                          break;
 
-                case 9 : ssm.displayMonthlyReport();
+                case 10 : ssm.displayMonthlyReport();
                          break;
 
-                case 10 : run = false;
+                case 11 : run = false;
                           break;
 
                 default: System.out.println("Invalid Options!");
@@ -181,6 +206,9 @@ public class Driver {
             if (!value.matches("^[0-9]*")){
                 System.out.println("Enter only integer value!");
                 value  = sc.nextLine();
+                tryagain = true;
+            }
+            else if (value.isEmpty()){
                 tryagain = true;
             }
             else {
@@ -401,16 +429,17 @@ public class Driver {
         System.out.println("\n*********************************************************");
         System.out.println("Select the below Options [1-10]");
         System.out.println("*********************************************************");
-        System.out.println("1. Register a Learner");
-        System.out.println("2. Book a Session");
-        System.out.println("3. Cancel a Session");
-        System.out.println("4. Reschedule the  a Session");
-        System.out.println("5. Write a Review for Coach");
-        System.out.println("6. Display Session Report");
-        System.out.println("7. Display Learner Report");
-        System.out.println("8. Display Coach Report");
-        System.out.println("9. Display Monthly Report");
-        System.out.println("10. Exit ");
+        System.out.println("1.  Register a Learner");
+        System.out.println("2.  Book a Session");
+        System.out.println("3.  Cancel a Session");
+        System.out.println("4.  Reschedule the Session");
+        System.out.println("5.  Attend the Session");
+        System.out.println("6.  Write a Review for Coach");
+        System.out.println("7.  Display Session Report");
+        System.out.println("8.  Display Learner Report");
+        System.out.println("9.  Display Coach Report");
+        System.out.println("10. Display Monthly Report");
+        System.out.println("11. Exit ");
         System.out.println("*********************************************************");
 
     }

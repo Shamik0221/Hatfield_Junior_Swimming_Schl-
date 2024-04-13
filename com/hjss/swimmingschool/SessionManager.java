@@ -164,6 +164,17 @@ public class SessionManager implements java.io.Serializable {
         return l;
     }
 
+    public boolean removeLearner(Session s, Learner l) {
+        int index = 0;
+        boolean status = false;
+        for(; index<listSessions.size(); index++){
+            if (listSessions.get(index).isLearnerExists(l)){
+                listSessions.get(index).removeLearner(l);
+                return true;
+            }
+        }
+        return status;
+    }
 
     public void displayLearnerBookedSession(Learner l){
         int index = 0;

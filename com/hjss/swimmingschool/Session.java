@@ -9,7 +9,6 @@ public class Session implements java.io.Serializable{
     private static int maxLearner = 4;
 
     private int id;
-    private String day;
     private int gradeLevel;
     private TimeSlot timeslot;
     private String coachName;
@@ -117,8 +116,9 @@ public class Session implements java.io.Serializable{
 
     public void printInfo() {
         System.out.println("Session Id         : " + id);
-        System.out.println("Session Day        : " + day);
-        System.out.println("Session Timeslot   : " + timeslot);
+        System.out.println("Session Day        : " + timeslot.getDay());
+        System.out.println("Session Time       : " + timeslot.getTime());
+        System.out.println("Session Week       : " + timeslot.getWeek());
         System.out.println("Session Coach Name : " + coachName);
         System.out.println("Number of Learners : " + numberLearners);
         for(Learner l: listOfLearners ){

@@ -78,6 +78,20 @@ public class Learner  implements java.io.Serializable {
         return this.grade;
     }
 
+    public int getNumberBooking(){
+        return sessionBooked.size();
+    }
+    public boolean isSessionExists(Session s) {
+        boolean status = false;
+        for(Session t: sessionBooked) {
+            if (t == s) {
+                status = true;
+                break;
+            }
+        }
+        return status;
+    }
+
     public boolean findInBookedSession(Session s) {
         boolean status = false;
         for(Session t: sessionBooked) {
