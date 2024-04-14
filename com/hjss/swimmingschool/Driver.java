@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Arrays;
 import java.util.Random;
 
+
 public class Driver {
 
     private static SessionManager ssm;
@@ -44,7 +45,8 @@ public class Driver {
         boolean status = false ;
         int gradeLevel;
         int choice;
-
+        int weekNumber;
+        int monthNumber;
         // read database.obj file
         ssm = readDatabase();
 
@@ -77,7 +79,13 @@ public class Driver {
                          System.out.println("3. Book the session by instructor wise\n");
                          choice = getInt(sc,"Enter the value between 1 to 3: ",1,3,"Warning: Please enter value between 1 to 3");
                          if (choice == 1) {
-                             day = getString(sc,"Enter the day (Monday, Wednesday, Friday, or Saturday): ");
+                             while(true){
+                                 day = getString(sc,"Enter the day (Monday, Wednesday, Friday, or Saturday): ");
+                                 if ( day.equals("Monday") || day.equals("Wednesday") || day.equals("Friday") || day.equals("Saturday") == true)
+                                     break;
+                                 else
+                                     System.out.println(day + "not a valid day!");
+                             }
                              ssm.displayUpComingSessionByDay(day);
                          }
                          else if (choice == 2) {
@@ -85,7 +93,14 @@ public class Driver {
                              ssm.displayUpComingSessionByGrade(gradeLevel);
 
                          }else if (choice == 3) {
-                             coachName = getString(sc,"Enter the Coach's Name: ");
+                             while(true){
+                                 coachName = getString(sc,"Enter the Coach's Name: ");
+                                 c  = ssm.findCoach(coachName);
+                                 if ( c != null)
+                                     break;
+                                 else
+                                     System.out.println(coachName + "not a valid coach Name!");
+                             }
                              ssm.displayUpComingSessionByInstructor(coachName);
                          }
                          s = promptAndFindSession(sc);
@@ -149,6 +164,13 @@ public class Driver {
                                      l.updateSession(s);
                                      System.out.println("Learner has Attended Session!");
                                      ssm.removeLearner(s,l);
+                                     coachName = s.getCoach();
+                                     String comment = getString(sc, "Enter the review comment as a line: ");
+                                     int rating = getInt(sc, "Enter the review rating: ",1,5,"Warning: Please enter the integer only!");
+                                     Review r = new Review(l.getName(), rating,comment);
+                                     c = ssm.findCoach(coachName);
+                                     weekNumber = s.getWeek();
+                                     c.addReview(weekNumber/4,r);
                                  }
                                  else {
                                      l.removeSession(s);
@@ -165,40 +187,25 @@ public class Driver {
                          }
 
                          break;
-                case 6 :  name = getString(sc, "Enter the Learner's Name: ");
-                         if (ssm.isLearnerRegister(name)) {
-                             l = ssm.findLearner(name);
-                         }
-                         else {
-                             System.out.println("Warning: " + name + " is not registered in the Learners!");
-                             break;
-                         }
-                         l.printCompletedSession();
-                         coachName = getString(sc, "For Whom you want to write Review: ");
-                         if (l.isfindCoachInCompletedSession(coachName)) {
-                            String comment = getString(sc, "Enter the review comment as a line: ");
-                            int rating = getInt(sc, "Enter the review rating: ",1,5,"Warning: Please enter the integer only!");
-                            Review r = new Review(l.getName(), rating,comment);
-                            c = ssm.findCoach(coachName);
-                            c.addReview(r);
-                         }
-                         else {
-                             System.out.println("Warning: you didn't complete any session with Coach: " + coachName +"!");
-                         }
-
-                case 7 : ssm.displaySessionReport();
+                case 6 : ssm.displaySessionReport();
                          break;
 
-                case 8 : ssm.displayLearnerReport();
+                case 7 :
+                         monthNumber = getInt(sc, "Enter the month (1,2,...12): ",1,12,"Warning: Please enter integer value between 1 to 12");
+                         ssm.displayLearnerReport(monthNumber);
                          break;
 
-                case 9 : ssm.displayCoachReport();
+                case 8 : 
+                         monthNumber = getInt(sc, "Enter the month (1,2,...12): ",1,12,"Warning: Please enter integer value between 1 to 12");
+                         ssm.displayCoachReport(monthNumber);
                          break;
 
-                case 10 : ssm.displayMonthlyReport();
+                case 9 : 
+                         monthNumber = getInt(sc, "Enter the month (1,2,...12): ",1,12,"Warning: Please enter integer value between 1 to 12");
+                         ssm.displayMonthlyReport(monthNumber);
                          break;
 
-                case 11 : run = false;
+                case 10 : run = false;
                           break;
 
                 default: System.out.println("Invalid Options!");
@@ -266,10 +273,25 @@ public class Driver {
     public static Session promptAndFindSession(Scanner sc) {
         Session s = null;
         boolean tryagain;
+        String day;
+        String time;
+        int weekNumber;
         do {
-            String day = getString(sc, "Enter the day of booking (Monday,Wednesday,Friday,Saturday: ");
-            String time = getString(sc, "Enter the time of booking (2-3pm,3-4pm,4-5pm,5-6pm,6-7pm): ");
-            int weekNumber = getInt(sc, "Enter the week of the booking (1,2,3,4):", 1, 4, "Error: enter week number between 1 to 4 inclusive.");
+            while(true){
+                day = getString(sc,"Enter the day (Monday, Wednesday, Friday, or Saturday): ");
+                if ( day.equals("Monday") || day.equals("Wednesday") || day.equals("Friday") || day.equals("Saturday"))
+                    break;
+                else
+                    System.out.println(day + " not a valid day!");
+            }
+            while(true){
+                time = getString(sc, "Enter the time of booking (2-3pm,3-4pm,4-5pm,5-6pm,6-7pm): ");
+                if ( time.equals("2-3pm") || time.equals("3-4pm") || time.equals("4-5pm") || time.equals("5-6pm") || time.equals("6-7pm"))
+                    break;
+                else
+                    System.out.println(time + " not a valid time!");
+            }
+            weekNumber = getInt(sc, "Enter the week of the booking (1,2..52):", 1, 52, "Error: enter week number between 1 to 52 inclusive.");
             if (ssm.isValidSlot(day, time, weekNumber)) {
                 s = ssm.findSession(day,time,weekNumber);
                 tryagain = false;
@@ -279,16 +301,31 @@ public class Driver {
         } while (tryagain);
         return s;
     }
-    
+
     // Prompt a session
     public static Session promptSession(Scanner sc, String msg) {
         Session s = null;
         boolean tryagain;
         System.out.println(msg);
+        String day;
+        String time;
+        int weekNumber;
         do {
-            String day = getString(sc, "Enter the day of booking (Monday,Wednesday,Friday,Saturday: ");
-            String time = getString(sc, "Enter the time of booking (2-3pm,3-4pm,4-5pm,5-6pm,6-7pm): ");
-            int weekNumber = getInt(sc, "Enter the week of the booking (1,2,3,4):", 1, 4, "Error: enter week number between 1 to 4 inclusive.");
+            while(true){
+                day = getString(sc,"Enter the day (Monday, Wednesday, Friday, or Saturday): ");
+                if ( day.equals("Monday") || day.equals("Wednesday") || day.equals("Friday") || day.equals("Saturday"))
+                    break;
+                else
+                    System.out.println(day + " not a valid day!");
+            }
+            while(true){
+                time = getString(sc, "Enter the time of booking (2-3pm,3-4pm,4-5pm,5-6pm,6-7pm): ");
+                if ( time.equals("2-3pm") || time.equals("3-4pm") || time.equals("4-5pm") || time.equals("5-6pm") || time.equals("6-7pm"))
+                    break;
+                else
+                    System.out.println(time + " not a valid time!");
+            }
+            weekNumber = getInt(sc, "Enter the week of the booking (1,2..52):", 1, 52, "Error: enter week number between 1 to 52 inclusive.");
             if (ssm.isValidSlot(day, time, weekNumber)) {
                 s = ssm.findSession(day,time,weekNumber);
                 tryagain = false;
@@ -460,12 +497,11 @@ public class Driver {
         System.out.println("3.  Cancel a Session");
         System.out.println("4.  Reschedule the Session");
         System.out.println("5.  Attend the Session");
-        System.out.println("6.  Write a Review for Coach");
-        System.out.println("7.  Display Session Report");
-        System.out.println("8.  Display Learner Report");
-        System.out.println("9.  Display Coach Report");
-        System.out.println("10. Display Monthly Report");
-        System.out.println("11. Exit ");
+        System.out.println("6.  Display Session Report");
+        System.out.println("7.  Display Monthly Learner Report");
+        System.out.println("8.  Display Monthly Coach Report");
+        System.out.println("9.  Display Monthly Report");
+        System.out.println("10. Exit ");
         System.out.println("*********************************************************");
 
     }

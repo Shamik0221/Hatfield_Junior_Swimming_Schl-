@@ -1,6 +1,7 @@
 package com.hjss.swimmingschool;
 import java.util.ArrayList;
 
+
 public class Learner  implements java.io.Serializable {
 
     private static int sequence = 10001;
@@ -56,6 +57,9 @@ public class Learner  implements java.io.Serializable {
     }
 
     // Getter Methods of the Coach Class
+    public int getId()   {
+        return this.id;
+    }
     public String getName()   {
         return this.name;
     }
@@ -191,7 +195,7 @@ public class Learner  implements java.io.Serializable {
             System.out.println("*********************************************************");
     }
 
-    public void printInfo() {
+    public void printInfo(int month) {
         int index = 0;
         System.out.println('\n');
         System.out.println("Learner Id       : " + id);
@@ -203,18 +207,24 @@ public class Learner  implements java.io.Serializable {
         System.out.println("Learner Grade    : " + grade);
         System.out.println("Completed Session: " + sessionCompleted.size() );
         for(index = 0;index < sessionCompleted.size(); index++) {
-            System.out.println(sessionCompleted.get(index));
-            System.out.println("");
+            if ( sessionCompleted.get(index).getWeek()/4 ==  month ){  
+                System.out.println(sessionCompleted.get(index));
+                System.out.println("");
+            }
         }
         System.out.println("Cancelled Session: " + sessionCancelled.size() );
         for(index = 0;index < sessionCancelled.size(); index++) {
-            System.out.println(sessionCancelled.get(index));
-            System.out.println("");
+            if ( sessionCancelled.get(index).getWeek()/4 ==  month ){  
+                System.out.println(sessionCancelled.get(index));
+                System.out.println("");
+            }
         }
         System.out.println("Booked Session: " +  sessionBooked.size() );
         for(index = 0;index < sessionBooked.size(); index++) {
-            System.out.println(sessionBooked.get(index));
-            System.out.println("");
+            if ( sessionBooked.get(index).getWeek()/4 ==  month ){  
+                System.out.println(sessionBooked.get(index));
+                System.out.println("");
+            }
         }
         System.out.println('\n');
     }

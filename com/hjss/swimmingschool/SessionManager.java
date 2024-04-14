@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
-
 public class SessionManager implements java.io.Serializable {
 
     private ArrayList<Coach> listCoaches;
@@ -60,7 +59,7 @@ public class SessionManager implements java.io.Serializable {
         ArrayList<String> days = new ArrayList<String>(Arrays.asList("Monday","Wednesday","Friday","Saturday"));
         ArrayList<String> times = new ArrayList<String>(Arrays.asList("2-3pm","3-4pm","4-5pm","5-6pm","6-7pm"));
         ArrayList<TimeSlot> slots = new ArrayList<TimeSlot>();
-        for(int weekNumber=1; weekNumber<=4 ; weekNumber++ ) {
+        for(int weekNumber=1; weekNumber<=52 ; weekNumber++ ) {
             for( String day : days) {
                 for( String time : times ) {
                     if ((day == "Monday" || day == "Wednesday" || day == "Friday" ) && ( time != "2-3pm" && time != "3-4pm")) {
@@ -230,32 +229,30 @@ public class SessionManager implements java.io.Serializable {
         }
     }
 
-    public void displayLearnerReport() {
+    public void displayLearnerReport(int month) {
         System.out.println("\n");
         int index = 0;
         for(; index < listLearners.size(); index++) {
-            listLearners.get(index).printInfo();
+            listLearners.get(index).printInfo(month);
         }
     }
 
-    public void displayCoachReport() {
+    public void displayCoachReport(int month) {
         System.out.println("\n");
         int index = 0;
         for(; index < listCoaches.size(); index++) {
-            listCoaches.get(index).printInfo();
+            listCoaches.get(index).printInfo(month);
         }
     }
 
 
     // printing the report and number of Learners 
-    public void displayMonthlyReport() {
+    public void displayMonthlyReport(int month) {
         System.out.println("********************************************************************************8");
         System.out.println("Coach Registered: " + getNumberCoaches());
-        displayCoachReport(); 
+        displayCoachReport(month);
         System.out.println("Learner Registered: "+ getNumberLearners());
-        displayLearnerReport();
-        System.out.println("Session Booked: "+ + getNumberSessions());
-        displaySessionReport(); 
+        displayLearnerReport(month);
         System.out.println("********************************************************************************8");
 
     }

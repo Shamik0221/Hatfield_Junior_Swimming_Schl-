@@ -3,6 +3,7 @@ package com.hjss.swimmingschool;
 import java.util.Arrays;
 import java.util.ArrayList;
 
+
 public class Session implements java.io.Serializable{
 
     private static int sequence = 30001;
@@ -60,7 +61,7 @@ public class Session implements java.io.Serializable{
     public boolean isLearnerExists(Learner l) {
         boolean status = false;
         for(Learner t: listOfLearners) {
-            if (t == l) {
+            if (t.getId()  == l.getId()) {
                 status = true;
                 break;
             }
@@ -86,7 +87,7 @@ public class Session implements java.io.Serializable{
         if (isLearnerExists(l)) {
             int index = 0;
             for(;index < listOfLearners.size(); index++){
-                if ( l.getName() == listOfLearners.get(index).getName() )
+                if ( l.getId() == listOfLearners.get(index).getId() )
                     break;
             }
             l.cancelSession(this);
