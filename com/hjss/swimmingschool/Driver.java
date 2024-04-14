@@ -40,8 +40,10 @@ public class Driver {
         Session s,ns;
         Coach c;
         Learner l;
-        String name, coachName;
+        String name, coachName, day;
         boolean status = false ;
+        int gradeLevel;
+        int choice;
 
         // read database.obj file
         ssm = readDatabase();
@@ -69,7 +71,23 @@ public class Driver {
                              System.out.println("Warning : Perform the Learner Registeration!");
                              break;
                          }
-                         ssm.displayUpComingSession();
+                         System.out.println("For Booking Session choose among three choices:");
+                         System.out.println("1. Book the session by Day (Monday, Wednesday, Friday, or Saturday");
+                         System.out.println("2. Book the session by grade level 1,2,3,4,5");
+                         System.out.println("3. Book the session by instructor wise\n");
+                         choice = getInt(sc,"Enter the value between 1 to 3: ",1,3,"Warning: Please enter value between 1 to 3");
+                         if (choice == 1) {
+                             day = getString(sc,"Enter the day (Monday, Wednesday, Friday, or Saturday): ");
+                             ssm.displayUpComingSessionByDay(day);
+                         }
+                         else if (choice == 2) {
+                             gradeLevel = getInt(sc, "Enter the grade level (1,2,3,4,5): ",1,5,"Warning: Please enter integer value between 1 to 5");
+                             ssm.displayUpComingSessionByGrade(gradeLevel);
+
+                         }else if (choice == 3) {
+                             coachName = getString(sc,"Enter the Coach's Name: ");
+                             ssm.displayUpComingSessionByInstructor(coachName);
+                         }
                          s = promptAndFindSession(sc);
                          status = ssm.bookSession(s,l);
                          if (status) 
@@ -126,10 +144,17 @@ public class Driver {
                          if (l.getNumberBooking() > 0 ) {
                              ssm.displayLearnerBookedSession(l);
                              s = promptSession(sc,"Select the already booked Session: ");
-                             if (l.isSessionExists(s) ) {
-                                 l.updateSession(s);
-                                 System.out.println("Learner has Attended Session!");
-                                 ssm.removeLearner(s,l);
+                             if (l.isSessionExists(s)) {
+                                 if (l.getGrade() <= s.getGrade()) {
+                                     l.updateSession(s);
+                                     System.out.println("Learner has Attended Session!");
+                                     ssm.removeLearner(s,l);
+                                 }
+                                 else {
+                                     l.removeSession(s);
+                                     ssm.removeLearner(s,l);
+                                     System.out.println("Learner can't attend session with lower grade level!");
+                                 }
                              }
                              else {
                                  System.out.println("Learner didn't book the entered session!");
@@ -397,6 +422,7 @@ public class Driver {
                                 ssm.addLearner(l);
                             }
                         }
+
                         int completedDone = 0;
                         while (completedDone < 10) {
                             int sessionIndex = randomGenerator.nextInt(ssm.getNumberSessions());

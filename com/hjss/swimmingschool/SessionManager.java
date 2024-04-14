@@ -176,6 +176,32 @@ public class SessionManager implements java.io.Serializable {
         return status;
     }
 
+    public void displayUpComingSessionByDay(String day) {
+        System.out.println("\nSession Available: ");
+        for(Session s : listSessions) {
+            if (s.getNumberLearners() < 4 && s.getDay().equals(day)){
+                System.out.println(s);
+            }
+        }
+    }
+
+    public void displayUpComingSessionByGrade(int gradeLevel){
+        System.out.println("\nSession Available: ");
+        for(Session s : listSessions) {
+            if (s.getNumberLearners() < 4 && s.getGrade() == gradeLevel){
+                System.out.println(s);
+            }
+        }
+    }
+    public void displayUpComingSessionByInstructor(String coachName) {
+        System.out.println("\nSession Available: ");
+        for(Session s : listSessions) {
+            if (s.getNumberLearners() < 4 && s.getCoach().equals(coachName)){
+                System.out.println(s);
+            }
+        }
+
+    }
     public void displayLearnerBookedSession(Learner l){
         int index = 0;
         for(index=0; index < listSessions.size(); index++ ){
@@ -233,6 +259,8 @@ public class SessionManager implements java.io.Serializable {
         System.out.println("********************************************************************************8");
 
     }
+
+
         
     // Booking a session in Session by adding a learner 
     public boolean bookSession(Session s, Learner l) {
@@ -255,24 +283,12 @@ public class SessionManager implements java.io.Serializable {
         return status;
     }
 
-
-    public String inputName(String object) {
-        String name = " ";
-        System.out.print("Enter the "+ object + ": ");
-        return name ;
-    }
-
     public void registerLearner(Learner l) {
         listLearners.add(l);
     }
 
     public void registerCoach(Coach c) {
         listCoaches.add(c);
-    }
-
-
-    public void writeReview(){
-
     }
 
 }

@@ -86,7 +86,7 @@ public class Coach  implements java.io.Serializable {
         System.out.println("Coach Exp      : " + yearOfExperience);
         System.out.println("Reviews: ");
         int index = 0;
-        for (; index < listReviews.size(); index++) {
+        for (index=0; index < listReviews.size(); index++) {
             listReviews.get(index).printInfo();
             System.out.println("");
         }

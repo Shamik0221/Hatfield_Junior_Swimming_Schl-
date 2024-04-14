@@ -12,6 +12,7 @@ public class Learner  implements java.io.Serializable {
     private String emergencyContact;
     private int grade;
     private ArrayList<Session> sessionCompleted;
+    private ArrayList<Session> sessionCancelled;
     private ArrayList<Session> sessionBooked;
 
     // Constructor
@@ -24,6 +25,7 @@ public class Learner  implements java.io.Serializable {
         this.emergencyContact = emergencyContact;
         this.grade = grade;
         sessionCompleted = new ArrayList<Session>();
+        sessionCancelled = new ArrayList<Session>();
         sessionBooked = new ArrayList<Session>();
     }
 
@@ -129,10 +131,17 @@ public class Learner  implements java.io.Serializable {
             sessionBooked.add(s);
         }
     }
+    
+    public void removeSession(Session s){
+        if (findInBookedSession(s) == true) {
+            sessionBooked.remove(s);
+        }
+    }
 
     public void cancelSession(Session s){
         if (findInBookedSession(s) == true) {
             sessionBooked.remove(s);
+            sessionCancelled.add(s);
         }
     }
 
@@ -145,6 +154,7 @@ public class Learner  implements java.io.Serializable {
         if (s.getGrade() >  grade) {
             grade = s.getGrade();
 
+            /*
             //removing booked session if session is lesser than their grade
             ArrayList<Session> temp = new ArrayList<Session>();
             for (Session ns : sessionBooked) {
@@ -158,7 +168,7 @@ public class Learner  implements java.io.Serializable {
             }
             // deleting the memory 
             temp = null;
-
+            */
         }
     }
    
@@ -182,6 +192,7 @@ public class Learner  implements java.io.Serializable {
     }
 
     public void printInfo() {
+        int index = 0;
         System.out.println('\n');
         System.out.println("Learner Id       : " + id);
         System.out.println("Learner Name     : " + name);
@@ -191,13 +202,17 @@ public class Learner  implements java.io.Serializable {
         System.out.println("Learner Emergency Contact Phone: " + emergencyContact);
         System.out.println("Learner Grade    : " + grade);
         System.out.println("Completed Session: " + sessionCompleted.size() );
-        int index = 0;
-        for(;index < sessionCompleted.size(); index++) {
+        for(index = 0;index < sessionCompleted.size(); index++) {
             System.out.println(sessionCompleted.get(index));
             System.out.println("");
         }
+        System.out.println("Cancelled Session: " + sessionCancelled.size() );
+        for(index = 0;index < sessionCancelled.size(); index++) {
+            System.out.println(sessionCancelled.get(index));
+            System.out.println("");
+        }
         System.out.println("Booked Session: " +  sessionBooked.size() );
-        for(;index < sessionBooked.size(); index++) {
+        for(index = 0;index < sessionBooked.size(); index++) {
             System.out.println(sessionBooked.get(index));
             System.out.println("");
         }

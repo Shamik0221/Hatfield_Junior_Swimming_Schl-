@@ -104,7 +104,7 @@ public class Session implements java.io.Serializable{
     
     @Override
     public String toString() {
-        String msg =  "Week " + timeslot.getWeek() +   "\nDay: " + timeslot.getDay() + "\nTime:" + timeslot.getTime() + "\nGrade Level: " + gradeLevel + "\nCoachName: " + coachName + "\nNumber of Learner:" +
+        String msg =  "Week: " + timeslot.getWeek() +   "\nDay: " + timeslot.getDay() + "\nTime:" + timeslot.getTime() + "\nGrade Level: " + gradeLevel + "\nCoachName: " + coachName + "\nNumber of Learner:" +
                 numberLearners + "\n";
         msg += "Learner Name: ";
         for(Learner l: listOfLearners ){
