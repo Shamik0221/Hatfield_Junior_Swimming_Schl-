@@ -15,7 +15,6 @@ public class Review implements java.io.Serializable {
     }
 
 
-
     public Review (String reviewer, int rating, String comment) {
         this.id = sequence++;
         this.reviewer = reviewer;

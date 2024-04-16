@@ -1,6 +1,5 @@
 package com.hjss.swimmingschool;
 
-
 public class TimeSlot  implements java.io.Serializable {
 
 
