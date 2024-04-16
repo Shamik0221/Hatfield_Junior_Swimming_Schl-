@@ -120,6 +120,7 @@ public class Session implements java.io.Serializable{
         System.out.println("Session Day        : " + timeslot.getDay());
         System.out.println("Session Time       : " + timeslot.getTime());
         System.out.println("Session Week       : " + timeslot.getWeek());
+        System.out.println("Session Grade Level: " + gradeLevel);
         System.out.println("Session Coach Name : " + coachName);
         System.out.println("Number of Learners : " + numberLearners);
         for(Learner l: listOfLearners ){

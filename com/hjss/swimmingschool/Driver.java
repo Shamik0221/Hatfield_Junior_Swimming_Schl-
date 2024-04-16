@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.lang.ClassNotFoundException;
 import java.lang.IllegalArgumentException;
 import java.util.InputMismatchException;
+import java.lang.Math;
+
 
 
 import java.util.Scanner;  // Import the Scanner class
@@ -16,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Random;
+import java.lang.Math;
+import java.lang.Math;
+import java.lang.Math;
 
 
 public class Driver {
@@ -170,7 +175,7 @@ public class Driver {
                                      Review r = new Review(l.getName(), rating,comment);
                                      c = ssm.findCoach(coachName);
                                      weekNumber = s.getWeek();
-                                     c.addReview(weekNumber/4,r);
+                                     c.addReview(1+(int)(Math.abs(weekNumber/4.3454)),r);
                                  }
                                  else {
                                      l.removeSession(s);
@@ -260,7 +265,14 @@ public class Driver {
     // Prompting Learner from user 
     public static Learner promptLearner(Scanner sc) {
         String name =  getString(sc, "Enter the Learner's Name: ");
-        String gender =  getString(sc, "Enter the Learner's Gender: ");
+        String gender;
+        while(true){
+            gender = getString(sc,"Enter the Learner's Gender: ");
+            if (  gender.equals("male") || gender.equals("female") || gender.equals("Male") || gender.equals("Female") || gender.equals("M") || gender.equals("F"))
+                break;
+            else
+                System.out.println(gender + " is not a valid gender option!");
+        }
         int age =  getInt(sc, "Enter the Learner's Age: ",4,11,"Error: enter age between 4 to 11 inclusive.");
         String phone =  getString(sc, "Enter the Learner's Phone: ");
         String emergency =  getString(sc, "Enter the Learner's Emergency Contact: ");
@@ -415,7 +427,7 @@ public class Driver {
                 else if (line.equals("Session:")) {
                     for (TimeSlot t: timeslots ) {
                         int index = randomGenerator.nextInt(ssm.getNumberCoaches());
-                        int gradeLevel = randomGenerator.nextInt(5);
+                        int gradeLevel = 1 + randomGenerator.nextInt(5);
                         Session s = new Session(t, ssm.getCoach(index).getName(),gradeLevel);
                         ssm.addSession(s);
                     }
