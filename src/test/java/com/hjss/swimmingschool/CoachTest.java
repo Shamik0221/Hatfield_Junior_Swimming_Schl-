@@ -13,6 +13,7 @@ class CoachTest {
 
     @BeforeEach
     void setUp() {
+
         coach = new Coach("James", "Male", 41, "+1-(331)-623232", 11);
     }
 

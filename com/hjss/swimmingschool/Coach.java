@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
-
 public class Coach  implements java.io.Serializable {
 
     // Data Variable for the class
@@ -26,8 +25,7 @@ public class Coach  implements java.io.Serializable {
         this.mapReviews = new HashMap<>();
     }
 
-    // Setters Method of the Coach Class
-
+    // Setters Method 
     public void setName(String newName)   {
         this.name = newName;
     }
@@ -48,7 +46,7 @@ public class Coach  implements java.io.Serializable {
         this.yearOfExperience = years;
     }
 
-    // Getter Methods of the Coach Class
+    // Getter Methods 
 
     public String getName()   {
         return this.name;
@@ -70,12 +68,13 @@ public class Coach  implements java.io.Serializable {
         return this.yearOfExperience ; 
     }
 
-    public void addReview(int month,Review r) {
+    public void addReview(int month, Review r) {
         ArrayList<Review> rList = mapReviews.get(month);
         if (rList == null)
             rList = new ArrayList<>();
         rList.add(r);
         mapReviews.put(month,rList); 
+        System.out.println("Coach: Review is added sucessfully!");
     }
 
     @Override
@@ -122,3 +121,5 @@ public class Coach  implements java.io.Serializable {
     }
 
 }
+
+

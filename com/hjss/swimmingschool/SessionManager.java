@@ -20,6 +20,29 @@ public class SessionManager implements java.io.Serializable {
         return listLearners.get(index);
     }
 
+    // Returns the Learner, Coach and Session from the list by index
+    public int  getLearnerIndex(Learner l) {
+        for(int index=0; index<listLearners.size(); index++){
+            if (listLearners.get(index).getName().equals(l.getName()) ){
+                return index; 
+            }
+        }
+        return -1;
+    }
+    
+    public int  getSessionIndex(Session s) {
+        for(int index=0; index<listSessions.size(); index++){
+            if (listSessions.get(index).getId() == s.getId()) {
+                return index; 
+            }
+        }
+        return -1;
+    }
+
+    public void  updateLearner(int lIndex, Learner l) {
+        listLearners.set(lIndex,l);
+    }
+    
     public Coach getCoach(int index) {
         return listCoaches.get(index);
     }
@@ -74,14 +97,12 @@ public class SessionManager implements java.io.Serializable {
             }
         }
         return slots;
-
     }
 
-    // findCoach
+    // findCoach fuction with coachName with string
     public Coach findCoach(String coachName) {
         Coach c = null;
-        int index = 0;
-        for(; index< listCoaches.size(); index++) {
+        for(int index=0; index<listCoaches.size(); index++) {
             if (listCoaches.get(index).getName().equals(coachName)) {
                 c = listCoaches.get(index);
                 break;
@@ -94,8 +115,7 @@ public class SessionManager implements java.io.Serializable {
     public Session findSession(String day, String time, int weekNumber ) {
         TimeSlot temp = new TimeSlot(day,time,weekNumber);
         Session s = null;
-        int index = 0;
-        for(; index< listSessions.size(); index++) {
+        for(int index=0; index< listSessions.size(); index++) {
             if (listSessions.get(index).getDay().equals(temp.getDay()) && listSessions.get(index).getTime().equals(temp.getTime()) && listSessions.get(index).getWeek() == temp.getWeek()) {
                 s = listSessions.get(index);
                 break;
@@ -118,61 +138,23 @@ public class SessionManager implements java.io.Serializable {
     
     // Printing the Coach in the list
     public void printCoachs() {
-        int index = 0;
-        for(index=0; index < listCoaches.size(); index++ ){
+        for(int index=0; index<listCoaches.size(); index++){
             System.out.println("Coach["+index+"]: " + listCoaches.get(index));
         }
     }
 
     // Printing the Session in the list
     public void printSessions() {
-        int index = 0;
-        for(index=0; index < listSessions.size(); index++ ){
+        for(int index=0; index<listSessions.size(); index++){
             System.out.println("Session["+index+"]:\n" + listSessions.get(index));
         }
     }
     
     // Printing the Learner in the list
     public void printLearners() {
-        int index = 0;
-        for(index=0; index < listLearners.size(); index++ ){
+        for(int index=0; index<listLearners.size(); index++){
             System.out.println("Learner["+index+"]: " + listLearners.get(index));
         }
-    }
-
-    // Find Learner name in the registered Learner
-    public boolean isLearnerRegister(String name) {
-        int index = 0;
-        for(; index<listLearners.size(); index++){
-            if (listLearners.get(index).getName().equals(name) ){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public Learner findLearner(String name) {
-        int index = 0;
-        Learner l = null;
-        for(; index<listLearners.size(); index++){
-            if (listLearners.get(index).getName().equals(name)){
-                l = listLearners.get(index);
-                break;
-            }
-        }
-        return l;
-    }
-
-    public boolean removeLearner(Session s, Learner l) {
-        int index = 0;
-        boolean status = false;
-        for(; index<listSessions.size(); index++){
-            if (listSessions.get(index).isLearnerExists(l)){
-                listSessions.get(index).removeLearner(l);
-                return true;
-            }
-        }
-        return status;
     }
 
     public void displayUpComingSessionByDay(String day) {
@@ -195,19 +177,21 @@ public class SessionManager implements java.io.Serializable {
     public void displayUpComingSessionByInstructor(String coachName) {
         System.out.println("\nSession Available: ");
         for(Session s : listSessions) {
-            if (s.getNumberLearners() < 4 && s.getCoach().equals(coachName)){
+            if (s.getNumberLearners() < 4 && s.getCoach().getName().equals(coachName)){
                 System.out.println(s);
             }
         }
 
     }
-    public void displayLearnerBookedSession(Learner l){
-        int index = 0;
-        for(index=0; index < listSessions.size(); index++ ){
+    public boolean displayLearnerBookedSession(Learner l){
+        boolean status = false;
+        for(int index=0; index<listSessions.size(); index++ ){
             if (listSessions.get(index).isLearnerExists(l)){
                 System.out.println("Session["+index+"]:\n" + listSessions.get(index));
+                status = true;
             }
         }
+        return status;
     }
 
     public void displayUpComingSession() {
@@ -258,34 +242,125 @@ public class SessionManager implements java.io.Serializable {
     }
 
 
-        
-    // Booking a session in Session by adding a learner 
-    public boolean bookSession(Session s, Learner l) {
-        return s.addLearner(l);
-    }
-
-    public boolean cancelSession(Session s, Learner l) {
-        return s.removeLearner(l);
-    }
-
-    public boolean  changeSession(Session os, Session ns, Learner l) {
-        boolean status = os.removeLearner(l);
-        if (status) {
-            status = ns.addLearner(l);
-            if (status)
+    // Find Learner name in the registered Learner
+    public boolean isLearnerRegister(String name) {
+        for(int index=0; index<listLearners.size(); index++){
+            if (listLearners.get(index).getName().equals(name) ){
                 return true;
-            else
-                return false;
+            }
+        }
+        return false;
+    }
+
+    public Learner findLearner(String name) {
+        int index = 0;
+        Learner l = null;
+        for(; index<listLearners.size(); index++){
+            if (listLearners.get(index).getName().equals(name)){
+                l = listLearners.get(index);
+                break;
+            }
+        }
+        return l;
+    }
+
+    public boolean removeLearner(Session s, Learner l) {
+        boolean status = false;
+        for(int index=0; index<listSessions.size(); index++){
+            if (listSessions.get(index).isLearnerExists(l)){
+                listSessions.get(index).removeLearner(l);
+                return true;
+            }
         }
         return status;
     }
 
-    public void registerLearner(Learner l) {
-        listLearners.add(l);
+        
+    // Booking a session in Session by adding a learner 
+    public boolean bookSession(Session s, Learner l) {
+        boolean status = l.isSessionExists(s);
+        if (status == false) {
+            status = s.addLearner(l);
+            if (status == true ) {
+                l.bookSession(s);
+                int index = getLearnerIndex(l);
+                if (index == -1) {
+                    addLearner(l);
+                }
+                else{
+                    listLearners.set(index,l);
+                }
+                return true;
+            }
+            return false;
+        }
+        else{
+            System.out.println("Error:  Learner is already in the same session!");
+        }
+        return false; 
     }
 
-    public void registerCoach(Coach c) {
-        listCoaches.add(c);
+    public boolean cancelSession(Session s, Learner l) {
+        boolean status = l.isSessionExists(s);
+        if (status == false) {
+            System.out.println("Error:  Learner is not in booked Session");
+        }
+        else{
+            l.cancelSession(s);
+            status = s.removeLearner(l);
+            int index = getLearnerIndex(l);
+            if (index == -1) {
+                addLearner(l);
+            }
+            else{
+                listLearners.set(index,l);
+            }
+            return true;
+        }
+        return false; 
+    }
+
+    public boolean  changeSession(Session os, Session ns, Learner l) {
+        boolean status = l.isSessionExists(os);
+        if (status == false) {
+            System.out.println("Error:  Learner is not in booked Session");
+        }
+        else{
+            if (ns.addLearner(l) == true) {
+                status = os.removeLearner(l);
+                if (status == false) {
+                    ns.removeLearner(l);
+                    return false;
+                }
+                else{
+                    l.removeSession(os);
+                    l.bookSession(ns);
+                    // updating old sesison
+                    int osIndex = getSessionIndex(os);
+                    if (osIndex != -1)
+                        listSessions.set(osIndex,os);
+                    // updating new session
+                    int nsIndex = getSessionIndex(ns);
+                    if (nsIndex != -1 )
+                        listSessions.set(nsIndex,ns);
+                    // updating learner class in list of leqanrs
+                    int lIndex = getLearnerIndex(l);
+                    if (lIndex == -1) {
+                        addLearner(l);
+                    }
+                    else{
+                        listLearners.set(lIndex,l);
+                    }
+
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void registerLearner(Learner l) {
+        listLearners.add(l);
     }
 
 }

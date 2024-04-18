@@ -25,13 +25,13 @@ public class Learner  implements java.io.Serializable {
         this.phone = phone;
         this.emergencyContact = emergencyContact;
         this.grade = grade;
+        
         sessionCompleted = new ArrayList<Session>();
         sessionCancelled = new ArrayList<Session>();
         sessionBooked = new ArrayList<Session>();
     }
 
-    // Setters Method of the Learner Class
-
+    // Setters Methods 
     public void setName(String newName)   {
         this.name = newName;
     }
@@ -56,7 +56,7 @@ public class Learner  implements java.io.Serializable {
         this.grade = newGrade;
     }
 
-    // Getter Methods of the Coach Class
+    // Getter Methods 
     public int getId()   {
         return this.id;
     }
@@ -87,10 +87,11 @@ public class Learner  implements java.io.Serializable {
     public int getNumberBooking(){
         return sessionBooked.size();
     }
+    
     public boolean isSessionExists(Session s) {
         boolean status = false;
         for(Session t: sessionBooked) {
-            if (t == s) {
+            if (t.getId() == s.getId()) {
                 status = true;
                 break;
             }
@@ -98,81 +99,52 @@ public class Learner  implements java.io.Serializable {
         return status;
     }
 
-    public boolean findInBookedSession(Session s) {
-        boolean status = false;
-        for(Session t: sessionBooked) {
-            if (t == s) {
-                status = true;
-                break;
-            }
-        }
-        return status;
-    }
-
-    public boolean findInCompletedSession(Session s) {
-        boolean status = false;
-        for(Session t: sessionCompleted) {
-            if (t == s) {
-                status = true;
-                break;
-            }
-        }
-        return status;
-    }
-
-    public boolean isfindCoachInCompletedSession(String coachName) {
-        boolean status = false;
-        for(Session t: sessionCompleted) {
-            if (t.getCoach().equals(coachName)) {
-                status = true;
-                break;
-            }
-        }
-        return status;
-    }
     public void bookSession(Session s){
-        if (findInBookedSession(s) == false) {
+        if (isSessionExists(s) == false) {
             sessionBooked.add(s);
+            System.out.println("Learner :  Session Booked Successfully!");
+        }
+        else {
+            System.out.println("Learner: (Error) Session already exists in Booked Session!");
         }
     }
     
     public void removeSession(Session s){
-        if (findInBookedSession(s) == true) {
+        if (isSessionExists(s) == true) {
             sessionBooked.remove(s);
+            System.out.println("Learner :  Session Removed Successfully!");
+        }
+        else{
+            System.out.println("Learner: (Error) can't find Session in Booked Session!");
         }
     }
 
     public void cancelSession(Session s){
-        if (findInBookedSession(s) == true) {
+        if (isSessionExists(s) == true) {
             sessionBooked.remove(s);
             sessionCancelled.add(s);
+            System.out.println("Learner :  Session Cancelled Successfully!");
+
+        }
+        else {
+            System.out.println("Learner: (Error) can't find Session in Booked Session!");
         }
     }
 
     public void updateSession(Session s) {
+        if (isSessionExists(s) == true) {
+            sessionBooked.remove(s);
+            sessionCompleted.add(s); 
 
-        sessionBooked.remove(s);
-        sessionCompleted.add(s); 
-
-        // update the grade of the student
-        if (s.getGrade() >  grade) {
-            grade = s.getGrade();
-
-            /*
-            //removing booked session if session is lesser than their grade
-            ArrayList<Session> temp = new ArrayList<Session>();
-            for (Session ns : sessionBooked) {
-                if (ns.getGrade() < grade) {
-                    temp.add(ns);
-                }
+            // update the grade of the student
+            if (s.getGrade() >  grade) {
+                grade = s.getGrade();
             }
-            for (Session ns : temp) {
-                System.out.println("In Student : Deleting Lower Grade Session :\n" + ns);
-                sessionBooked.remove(ns);
-            }
-            // deleting the memory 
-            temp = null;
-            */
+            System.out.println("Learner :  Session Updated Successfully!");
+        
+        }
+        else {
+            System.out.println("Learner: (Error) can't find Session in Booked Session!");
         }
     }
    
@@ -182,21 +154,12 @@ public class Learner  implements java.io.Serializable {
     }
     
     public void printCompletedSession() {
-        int index = 0;
-        boolean printFlag = false;
-        System.out.println("*********************************************************");
-        for(;index < sessionCompleted.size(); index++) {
+        for(int index=0; index < sessionCompleted.size(); index++) {
             System.out.println(sessionCompleted.get(index));
-            if (index != sessionCompleted.size()-1)
-                System.out.println("--------------------------------------------------------");
-            printFlag = true;
         }
-        if (printFlag)
-            System.out.println("*********************************************************");
     }
-
+    
     public void printInfo(int month) {
-        int index = 0;
         System.out.println('\n');
         System.out.println("Learner Id       : " + id);
         System.out.println("Learner Name     : " + name);
@@ -206,27 +169,28 @@ public class Learner  implements java.io.Serializable {
         System.out.println("Learner Emergency Contact Phone: " + emergencyContact);
         System.out.println("Learner Grade    : " + grade);
         System.out.println("Completed Session: " + sessionCompleted.size() );
-        for(index = 0;index < sessionCompleted.size(); index++) {
-            if ( sessionCompleted.get(index).getWeek()/4 ==  month ){  
+        for(int index = 0;index < sessionCompleted.size(); index++) {
+            if ( (int)(sessionCompleted.get(index).getWeek()/4.3454) ==  month-1 ){  
                 System.out.println(sessionCompleted.get(index));
                 System.out.println("");
             }
         }
         System.out.println("Cancelled Session: " + sessionCancelled.size() );
-        for(index = 0;index < sessionCancelled.size(); index++) {
-            if ( sessionCancelled.get(index).getWeek()/4 ==  month ){  
+        for(int index = 0;index < sessionCancelled.size(); index++) {
+            if ( (int)(sessionCancelled.get(index).getWeek()/4.3454) ==  month-1 ){  
                 System.out.println(sessionCancelled.get(index));
                 System.out.println("");
             }
         }
         System.out.println("Booked Session: " +  sessionBooked.size() );
-        for(index = 0;index < sessionBooked.size(); index++) {
-            if ( sessionBooked.get(index).getWeek()/4 ==  month ){  
+        for(int index = 0;index < sessionBooked.size(); index++) {
+            if ( (int)(sessionBooked.get(index).getWeek()/4.3454) ==  month-1 ){  
                 System.out.println(sessionBooked.get(index));
                 System.out.println("");
             }
         }
         System.out.println('\n');
+        
     }
 }
 

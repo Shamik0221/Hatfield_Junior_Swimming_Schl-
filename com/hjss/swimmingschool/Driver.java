@@ -1,4 +1,5 @@
 package com.hjss.swimmingschool;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -6,26 +7,23 @@ import java.io.ObjectOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
+
 import java.lang.ClassNotFoundException;
-import java.lang.IllegalArgumentException;
-import java.util.InputMismatchException;
 import java.lang.Math;
-
-
 
 import java.util.Scanner;  // Import the Scanner class
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Random;
-import java.lang.Math;
-import java.lang.Math;
-import java.lang.Math;
 
 
 public class Driver {
-
+    
+    // Manager for Sessiones, Coaches and Leearners
     private static SessionManager ssm;
+    
+    //random generators
     private static Random randomGenerator = new Random();
 
     public static void main(String[] args) throws Exception {
@@ -36,8 +34,8 @@ public class Driver {
         // Setting welcome msg
         System.out.println("Welcome to the Hatfield Junior Swimming School");
 
-        int optionNumber = 1;
         // setting run to true for running a loop until user exit
+        int optionNumber = 1;
 
         boolean run = true;
         // Runing a loop until user choose to exit
@@ -48,11 +46,13 @@ public class Driver {
         Learner l;
         String name, coachName, day;
         boolean status = false ;
+        int lIndex;
         int gradeLevel;
         int choice;
         int weekNumber;
         int monthNumber;
-        // read database.obj file
+        
+        // read database.obj file or read defaultinput.txt file to create sessions, coaches, and Learners
         ssm = readDatabase();
 
         while (run) {
@@ -124,13 +124,18 @@ public class Driver {
                              System.out.println("Warning: " + name + " is not registered in the Learners!");
                              break;
                          }
-                         ssm.displayLearnerBookedSession(l);
-                         s = promptAndFindSession(sc);
-                         status = ssm.cancelSession(s,l);
-                         if (status)
-                             System.out.println("Cancellation of booking is Sucessful!");
-                         else
-                             System.out.println("Cancellation of booking is Unsucessful!");
+                         status = ssm.displayLearnerBookedSession(l);
+                         if (status ) {
+                             s = promptAndFindSession(sc);
+                             status = ssm.cancelSession(s,l);
+                             if (status)
+                                 System.out.println("Cancellation of booking is Sucessful!");
+                             else
+                                 System.out.println("Cancellation of booking is Unsucessful!");
+                         }
+                         else {
+                                 System.out.println(l.getName() + ": No booking found for Learner");
+                         }
                          break;
 
 
@@ -142,15 +147,20 @@ public class Driver {
                              System.out.println("Warning: " + name + " is not registered in the Learners!");
                              break;
                          }
-                         ssm.displayLearnerBookedSession(l);
-                         s = promptSession(sc,"Select the already booked Session: ");
-                         ssm.displayUpComingSession();
-                         ns = promptSession(sc,"Select the Session which you want to book: ");
-                         status = ssm.changeSession(s,ns,l);
-                         if (status) 
-                             System.out.println("Reschedule of booking is Sucessful!");
-                         else
-                             System.out.println("Reschedule of booking is Unsucessful!");
+                         status = ssm.displayLearnerBookedSession(l);
+                         if (status) { 
+                             s = promptSession(sc,"Select the already booked Session: ");
+                             ssm.displayUpComingSession();
+                             ns = promptSession(sc,"Select the Session which you want to book: ");
+                             status = ssm.changeSession(s,ns,l);
+                             if (status) 
+                                 System.out.println("Reschedule of booking is Sucessful!");
+                             else
+                                 System.out.println("Reschedule of booking is Unsucessful!");
+                         }
+                         else {
+                                 System.out.println(l.getName() + ": No booking found for Learner");
+                         }
                          break;
 
                 case 5 : name = getString(sc, "Enter the Learner's Name: ");
@@ -164,12 +174,21 @@ public class Driver {
                          if (l.getNumberBooking() > 0 ) {
                              ssm.displayLearnerBookedSession(l);
                              s = promptSession(sc,"Select the already booked Session: ");
+                             // Testting in the learner update
                              if (l.isSessionExists(s)) {
                                  if (l.getGrade() <= s.getGrade()) {
                                      l.updateSession(s);
+                                     // updateing in SSM
+                                     lIndex =  ssm.getLearnerIndex(l);
+                                     if(lIndex == -1)
+                                         System.out.println("Error:  Learner: " + l.getName() + "  not able to find");
+                                     ssm.updateLearner(lIndex,l);
                                      System.out.println("Learner has Attended Session!");
-                                     ssm.removeLearner(s,l);
-                                     coachName = s.getCoach();
+                                     
+                                     // updating in Session Manager Session list
+                                     status = ssm.removeLearner(s,l);
+                                     System.out.println(status);
+                                     coachName = s.getCoach().getName();
                                      String comment = getString(sc, "Enter the review comment as a line: ");
                                      int rating = getInt(sc, "Enter the review rating: ",1,5,"Warning: Please enter the integer only!");
                                      Review r = new Review(l.getName(), rating,comment);
@@ -212,7 +231,7 @@ public class Driver {
 
                 case 10 : run = false;
                           break;
-
+                
                 default: System.out.println("Invalid Options!");
                          break;
             }
@@ -261,6 +280,44 @@ public class Driver {
         } while (tryagain); 
         return Integer.valueOf(value);
     }
+    
+
+    // Prompt a session
+    public static Session promptSession(Scanner sc, String msg) {
+        Session s = null;
+        boolean tryagain;
+        System.out.println(msg);
+        String day;
+        String time;
+        int weekNumber;
+        do {
+            while(true){
+                day = getString(sc,"Enter the day (Monday, Wednesday, Friday, or Saturday): ");
+                if ( day.equals("Monday") || day.equals("Wednesday") || day.equals("Friday") || day.equals("Saturday"))
+                    break;
+                else
+                    System.out.println(day + " not a valid day!");
+            }
+            while(true){
+                time = getString(sc, "Enter the time of booking (2-3pm,3-4pm,4-5pm,5-6pm,6-7pm): ");
+                if ( time.equals("2-3pm") || time.equals("3-4pm") || time.equals("4-5pm") || time.equals("5-6pm") || time.equals("6-7pm"))
+                    break;
+                else
+                    System.out.println(time + " not a valid time!");
+            }
+            weekNumber = getInt(sc, "Enter the week of the booking (1,2..52):", 1, 52, "Error: enter week number between 1 to 52 inclusive.");
+            if (ssm.isValidSlot(day, time, weekNumber)) {
+                s = ssm.findSession(day,time,weekNumber);
+                tryagain = false;
+            } else {
+                tryagain = true;
+            }
+        } while (tryagain);
+        return s;
+    }
+
+
+
 
     // Prompting Learner from user 
     public static Learner promptLearner(Scanner sc) {
@@ -313,42 +370,6 @@ public class Driver {
         } while (tryagain);
         return s;
     }
-
-    // Prompt a session
-    public static Session promptSession(Scanner sc, String msg) {
-        Session s = null;
-        boolean tryagain;
-        System.out.println(msg);
-        String day;
-        String time;
-        int weekNumber;
-        do {
-            while(true){
-                day = getString(sc,"Enter the day (Monday, Wednesday, Friday, or Saturday): ");
-                if ( day.equals("Monday") || day.equals("Wednesday") || day.equals("Friday") || day.equals("Saturday"))
-                    break;
-                else
-                    System.out.println(day + " not a valid day!");
-            }
-            while(true){
-                time = getString(sc, "Enter the time of booking (2-3pm,3-4pm,4-5pm,5-6pm,6-7pm): ");
-                if ( time.equals("2-3pm") || time.equals("3-4pm") || time.equals("4-5pm") || time.equals("5-6pm") || time.equals("6-7pm"))
-                    break;
-                else
-                    System.out.println(time + " not a valid time!");
-            }
-            weekNumber = getInt(sc, "Enter the week of the booking (1,2..52):", 1, 52, "Error: enter week number between 1 to 52 inclusive.");
-            if (ssm.isValidSlot(day, time, weekNumber)) {
-                s = ssm.findSession(day,time,weekNumber);
-                tryagain = false;
-            } else {
-                tryagain = true;
-            }
-        } while (tryagain);
-        return s;
-    }
-
-
 
     // Loading the database from database.obj file
     public static SessionManager readDatabase() {
@@ -421,6 +442,7 @@ public class Driver {
             ArrayList<TimeSlot> timeslots = ssm.generateSlots();
             while(line != null){
                 line = line.replace("\n", "").replace("\r", "");
+                // System.out.println(line);
                 if (line.equals("Coach:")){
                     readFlag = 1;
                 }
@@ -428,7 +450,7 @@ public class Driver {
                     for (TimeSlot t: timeslots ) {
                         int index = randomGenerator.nextInt(ssm.getNumberCoaches());
                         int gradeLevel = 1 + randomGenerator.nextInt(5);
-                        Session s = new Session(t, ssm.getCoach(index).getName(),gradeLevel);
+                        Session s = new Session(t, ssm.getCoach(index),gradeLevel);
                         ssm.addSession(s);
                     }
                 }
@@ -455,7 +477,8 @@ public class Driver {
                         List<String> gradeList = Arrays.asList(line.split(","));
                         int bookingDone = 0;
                         int nameIndex = 0;
-                        while (bookingDone < 40) {
+                        while (bookingDone < 50) {
+                            //System.out.println(line);
                             int genderIndex = randomGenerator.nextInt(genderList.size());
                             int ageIndex = randomGenerator.nextInt(ageList.size());
                             int phoneIndex = randomGenerator.nextInt(phoneList.size());
@@ -468,24 +491,8 @@ public class Driver {
                             if (status) {
                                 nameIndex += 1;
                                 bookingDone += 1;
-                                ssm.addLearner(l);
                             }
                         }
-
-                        int completedDone = 0;
-                        while (completedDone < 10) {
-                            int sessionIndex = randomGenerator.nextInt(ssm.getNumberSessions());
-                            Session s = ssm.getSession(sessionIndex);
-                            if (s.getNumberLearners() > 0 ) {
-                                int learnerIndex = randomGenerator.nextInt(s.getNumberLearners());
-                                Learner l = s.getLearner(learnerIndex);
-                                s.removeLearner(l);
-                                l.updateSession(s);
-                                completedDone++;
-                            }
-                        }
-
-
 
                     }
                 }

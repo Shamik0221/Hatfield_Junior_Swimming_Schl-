@@ -3,37 +3,33 @@ package com.hjss.swimmingschool;
 import java.util.Arrays;
 import java.util.ArrayList;
 
-
 public class Session implements java.io.Serializable{
 
     private static int sequence = 30001;
     private static int maxLearner = 4;
-
     private int id;
     private int gradeLevel;
     private TimeSlot timeslot;
-    private String coachName;
+    private Coach coach;
     private int numberLearners;
 
-    private ArrayList<Review> listofReviews;
     private ArrayList<Learner> listOfLearners;
 
     // Constructor of the class
-    public Session(TimeSlot timeslot, String coachName, int gradeLevel) {
+    public Session(TimeSlot timeslot, Coach c, int gradeLevel) {
         this.id = sequence++;
         this.timeslot = timeslot;
-        this.coachName = coachName;
+        this.coach = c;
         this.gradeLevel = gradeLevel;
         this.numberLearners = 0;
         this.listOfLearners = new ArrayList<Learner>();
     }
 
-    // only coach name can be change as session is fixed
-    public void setCoach(String coach){
-        this.coachName = coach;
+    // Getter Methods 
+    public int getId() { 
+        return this.id; 
     }
-
-    // Getter Methods for Session
+    
     public int getGrade() {
         return this.gradeLevel;
     }
@@ -50,8 +46,12 @@ public class Session implements java.io.Serializable{
         return this.timeslot.getWeek();
     }
 
-    public String getCoach(){
-        return this.coachName;
+    public  Coach getCoach(){
+        return this.coach;
+    }
+    
+    public int getNumberLearners() {
+        return numberLearners;
     }
 
     public Learner getLearner(int index) {
@@ -72,11 +72,19 @@ public class Session implements java.io.Serializable{
     // Adding Learners into the session
     public boolean addLearner(Learner l){
         boolean status = false;
-        if ((numberLearners <= maxLearner) && ((l.getGrade() == gradeLevel -1) || (l.getGrade() == gradeLevel)))  {
-            status = true;
-            l.bookSession(this);
-            listOfLearners.add(l);
-            numberLearners++;
+        if ((numberLearners <= maxLearner)) {
+            if ((l.getGrade() == gradeLevel -1) || (l.getGrade() == gradeLevel))  {
+                listOfLearners.add(l);
+                numberLearners++;
+                status = true;
+                System.out.println("Session : Learner added Successfully!");
+            }
+            else{
+                System.out.println("Session: (Error) Not a valid Grade to register this Session!");
+            }
+        }
+        else {
+            System.out.println("Session: (Error) Maximum number of Learner in the Booked Session!");
         }
         return status;
     }
@@ -84,28 +92,24 @@ public class Session implements java.io.Serializable{
     // Adding Learners into the session
     public boolean removeLearner(Learner l){
         boolean status = false;
+        int index;
         if (isLearnerExists(l)) {
-            int index = 0;
-            for(;index < listOfLearners.size(); index++){
-                if ( l.getId() == listOfLearners.get(index).getId() )
+            for(index=0; index < listOfLearners.size(); index++){
+                if (l.getId() == listOfLearners.get(index).getId()) {
+                    listOfLearners.remove(l);
+                    numberLearners--;
+                    status = true;
                     break;
+                }
             }
-            l.cancelSession(this);
-            listOfLearners.remove(l);
-            numberLearners--;
-            status = true;
         }
         return status;
     }
 
 
-    public int getNumberLearners() {
-        return numberLearners;
-    }
-    
     @Override
     public String toString() {
-        String msg =  "Week: " + timeslot.getWeek() +   "\nDay: " + timeslot.getDay() + "\nTime:" + timeslot.getTime() + "\nGrade Level: " + gradeLevel + "\nCoachName: " + coachName + "\nNumber of Learner:" +
+        String msg =  "Week: " + timeslot.getWeek() +   "\nDay: " + timeslot.getDay() + "\nTime:" + timeslot.getTime() + "\nGrade Level: " + gradeLevel + "\nCoachName: " + coach.getName() + "\nNumber of Learner:" +
                 numberLearners + "\n";
         msg += "Learner Name: ";
         for(Learner l: listOfLearners ){
@@ -116,12 +120,11 @@ public class Session implements java.io.Serializable{
     }
 
     public void printInfo() {
-        System.out.println("Session Id         : " + id);
+        System.out.println("Session Week       : " + timeslot.getWeek());
         System.out.println("Session Day        : " + timeslot.getDay());
         System.out.println("Session Time       : " + timeslot.getTime());
-        System.out.println("Session Week       : " + timeslot.getWeek());
         System.out.println("Session Grade Level: " + gradeLevel);
-        System.out.println("Session Coach Name : " + coachName);
+        System.out.println("Session Coach Name : " + coach.getName());
         System.out.println("Number of Learners : " + numberLearners);
         for(Learner l: listOfLearners ){
             System.out.println("Learner Name: " + l.getName() + " Rating: " + l.getGrade() );

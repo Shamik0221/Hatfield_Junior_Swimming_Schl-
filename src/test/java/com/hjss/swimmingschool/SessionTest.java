@@ -13,7 +13,9 @@ class SessionTest {
     @BeforeEach
     void setUp() {
         TimeSlot t = new TimeSlot("Monday","3-4", 1);
-        s =  new Session(t,"James",1);
+        Coach c = new Coach("James", "Male", 41, "+1-(331)-623232", 11);
+
+        s =  new Session(t,c,1);
     }
 
     @AfterEach
@@ -21,12 +23,6 @@ class SessionTest {
         s = null;
     }
 
-    @Test
-    void setCoach() {
-        String name = "Courtney";
-        s.setCoach(name);
-        assertEquals(name,s.getCoach());
-    }
 
     @Test
     void getGrade() {

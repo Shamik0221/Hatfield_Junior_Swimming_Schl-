@@ -9,10 +9,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class LearnerTest {
 
     Learner learner = null;
+    Coach c = null;
 
     @BeforeEach
     void setUp() {
         learner = new Learner("Courtney","Female",19,"+1-(421)-223232", "+1-(123)-232322", 0);
+         c = new Coach("James", "Male", 41, "+1-(331)-623232", 11);
+
     }
 
     @AfterEach
@@ -97,14 +100,15 @@ class LearnerTest {
     @Test
     void bookSession() {
         TimeSlot t = new TimeSlot("Monday","3-4pm", 1);
-        Session s =  new Session(t,"James",1);
+
+        Session s =  new Session(t,c,1);
         boolean status = s.addLearner(learner);
         
         // Able to add the learner to session
         assertEquals(true,status);
 
         // able to find session in student's bookedSession
-        assertEquals(true, learner.findInBookedSession(s));
+        assertEquals(true, learner.isSessionExists(s));
         
     }
 
@@ -112,7 +116,7 @@ class LearnerTest {
     void cancelSession() {
 
         TimeSlot t = new TimeSlot("Monday","3-4pm", 1);
-        Session s =  new Session(t,"James",1);
+        Session s =  new Session(t,c,1);
         boolean status = s.addLearner(learner);
 
         // Able to add the learner to session
@@ -121,7 +125,7 @@ class LearnerTest {
         learner.cancelSession(s);
 
         // able to find session in student's bookedSession
-        assertEquals(false, learner.findInBookedSession(s));
+        assertEquals(false, learner.isSessionExists(s));
 
     }
 
@@ -129,7 +133,7 @@ class LearnerTest {
     void updateSession() {
 
         TimeSlot t = new TimeSlot("Monday","3-4pm", 1);
-        Session s =  new Session(t,"James",1);
+        Session s =  new Session(t,c,1);
         boolean status = s.addLearner(learner);
 
         // Able to add the learner to session
@@ -140,7 +144,6 @@ class LearnerTest {
         // able to find session in student's bookedSession
         assertEquals(1, learner.getGrade());
 
-        assertEquals(false, learner.findInBookedSession(s));
-        assertEquals(true, learner.findInCompletedSession(s));
+        assertEquals(false, learner.isSessionExists(s));
     }
 }
