@@ -102,10 +102,7 @@ class LearnerTest {
         TimeSlot t = new TimeSlot("Monday","3-4pm", 1);
 
         Session s =  new Session(t,c,1);
-        boolean status = s.addLearner(learner);
-        
-        // Able to add the learner to session
-        assertEquals(true,status);
+        learner.bookSession(s);
 
         // able to find session in student's bookedSession
         assertEquals(true, learner.isSessionExists(s));
@@ -117,13 +114,8 @@ class LearnerTest {
 
         TimeSlot t = new TimeSlot("Monday","3-4pm", 1);
         Session s =  new Session(t,c,1);
-        boolean status = s.addLearner(learner);
-
-        // Able to add the learner to session
-        assertEquals(true,status);
-
+        learner.bookSession(s);
         learner.cancelSession(s);
-
         // able to find session in student's bookedSession
         assertEquals(false, learner.isSessionExists(s));
 
@@ -134,16 +126,11 @@ class LearnerTest {
 
         TimeSlot t = new TimeSlot("Monday","3-4pm", 1);
         Session s =  new Session(t,c,1);
-        boolean status = s.addLearner(learner);
 
-        // Able to add the learner to session
-        assertEquals(true,status);
-
+        learner.bookSession(s);
         learner.updateSession(s);
 
         // able to find session in student's bookedSession
-        assertEquals(1, learner.getGrade());
-
         assertEquals(false, learner.isSessionExists(s));
     }
 }

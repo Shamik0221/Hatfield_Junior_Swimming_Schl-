@@ -8,12 +8,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SessionTest {
 
-    Session s;
+    Session s = null;
+    Coach c = null;
 
     @BeforeEach
     void setUp() {
         TimeSlot t = new TimeSlot("Monday","3-4", 1);
-        Coach c = new Coach("James", "Male", 41, "+1-(331)-623232", 11);
+        c = new Coach("James", "Male", 41, "+1-(331)-623232", 11);
 
         s =  new Session(t,c,1);
     }
@@ -41,7 +42,7 @@ class SessionTest {
 
     @Test
     void getCoach() {
-        assertEquals("James",s.getCoach());
+        assertEquals(c,s.getCoach());
     }
 
     @Test
